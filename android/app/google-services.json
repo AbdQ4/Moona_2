@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "979561084955",
+    "project_id": "moona-c97d8",
+    "storage_bucket": "moona-c97d8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:979561084955:android:456f2e64eb8ecd94bc20be",
+        "android_client_info": {
+          "package_name": "com.example.moona"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3qoPbwRi-hpGZezhivYL4rFaEcdMBycc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
