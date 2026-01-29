@@ -7,6 +7,7 @@ import 'package:moona/controller/validation_methods.dart';
 import 'package:moona/core/assets_manager.dart';
 import 'package:moona/core/colors_manager.dart';
 import 'package:moona/core/text_style.dart';
+import 'package:moona/widgets/code_text_field.dart';
 import 'package:moona/widgets/custom_elevated_button.dart';
 import 'package:moona/widgets/custom_text_form_field.dart';
 import 'package:provider/provider.dart';
@@ -26,55 +27,60 @@ class ForgetPasswordScreen extends StatelessWidget {
     final themeController = Provider.of<ThemeController>(context);
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: themeController.isLight
-                ? ColorsManager.white
-                : ColorsManager.green,
-          ),
+        leading: BackButton(
+          color: themeController.isLight
+              ? ColorsManager.green
+              : ColorsManager.gold,
         ),
       ),
       body: Padding(
         padding: REdgeInsets.symmetric(horizontal: 16, vertical: 24),
-        child: Column(
-          children: [
-            Form(
-              key: _formKey,
-              child: Center(
-                child: Text(
-                  "Forget Password",
-                  style: safeInter(
-                    color: themeController.isLight
-                        ? ColorsManager.green
-                        : ColorsManager.gold,
-                    fontSize: 30.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Forget Your Password?",
+                style: GoogleFonts.inter(
+                  color: themeController.isLight
+                      ? ColorsManager.green
+                      : ColorsManager.gold,
+                  fontSize: 24.sp,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
-            SizedBox(height: 150.h),
-            CustomTextFormField(
-              label: "E-mail",
-              prefixIconPath: AssetsManager.emailIcon,
-              validator: ValidationMethods.validateEmail,
-              controller: _emailController,
-            ),
-            SizedBox(height: 40.h),
-            CustomElevatedButton(
-              title: "Reset Password",
-              onTap: () {
-                String email = _emailController.text;
-                userController.resetPassword(email: email, context: context);
-              },
-            ),
-          ],
+              SizedBox(height: 8.h),
+              Text(
+                "Enter your email address below to receive a password reset token.",
+                style: GoogleFonts.inter(
+                  color: themeController.isLight
+                      ? ColorsManager.green.withAlpha(150)
+                      : ColorsManager.white,
+                  fontSize: 14.sp,
+                ),
+              ),
+              SizedBox(height: 32.h),
+              CustomTextFormField(
+                label: "Email",
+                prefixIconPath: AssetsManager.emailIcon,
+                controller: _emailController,
+              ),
+              SizedBox(height: 32.h),
+              Center(
+                child: Column(
+                  children: [
+                    CustomElevatedButton(
+                      title: "Send Reset Token",
+                      onTap: () {},
+                    ),
+                    Container(height: 60.h),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
-
-/// After the user clicks the link, they’ll be redirected back to your app. You need to handle onAuthStateChange or supabase.auth.onAuthStateChange to let the user set a new password (using supabase.auth.updateUser).

@@ -4,6 +4,8 @@ import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/routes_manager.dart';
 import 'package:moona/core/theme_manager.dart';
 import 'package:moona/view/auth/auth_redirect.dart';
+import 'package:moona/view/auth/login_screen.dart';
+import 'package:moona/view/auth/signup_screen.dart';
 import 'package:provider/provider.dart';
 
 class Moona extends StatelessWidget {
@@ -18,7 +20,7 @@ class Moona extends StatelessWidget {
       builder: (context, child) => MaterialApp(
         debugShowCheckedModeBanner: false,
         navigatorKey: navigatorKey,
-        initialRoute: AuthRedirect.routeName,
+        initialRoute: LoginScreen.routeName, //AuthRedirect.routeName,
         routes: RoutesManager.appRoutes,
         theme: ThemeManager.lightTheme,
         darkTheme: ThemeManager.darkTheme,
