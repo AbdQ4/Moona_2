@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
 import 'package:moona/view/contractor/products.dart';
+import 'package:provider/provider.dart';
 
 class ContractorCategoryPage extends StatelessWidget {
   final String categoryName;
@@ -14,16 +16,32 @@ class ContractorCategoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeController = Provider.of<ThemeController>(context);
     final size = MediaQuery.of(context).size;
     final height = size.height;
     final width = size.width;
 
     return Scaffold(
-      backgroundColor: ColorsManager.green,
+      backgroundColor: themeController.isLight
+          ? ColorsManager.white
+          : ColorsManager.green,
       appBar: AppBar(
-        title: Text(categoryName, style: TextStyle(color: ColorsManager.gold)),
-        backgroundColor: ColorsManager.green,
-        iconTheme: IconThemeData(color: ColorsManager.gold),
+        iconTheme: IconThemeData(
+          color: themeController.isLight
+              ? ColorsManager.white
+              : ColorsManager.gold,
+        ),
+        title: Text(
+          categoryName,
+          style: TextStyle(
+            color: themeController.isLight
+                ? ColorsManager.white
+                : ColorsManager.gold,
+          ),
+        ),
+        backgroundColor: themeController.isLight
+            ? ColorsManager.green
+            : ColorsManager.green,
       ),
       body: items.isEmpty
           ? Center(
@@ -53,7 +71,12 @@ class ContractorCategoryPage extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: ColorsManager.gold, width: 2),
+                        border: Border.all(
+                          color: themeController.isLight
+                              ? ColorsManager.green
+                              : ColorsManager.gold,
+                          width: 2,
+                        ),
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(16),

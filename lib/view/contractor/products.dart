@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
 import 'package:moona/view/contractor/product_details.dart';
 import 'package:moona/widgets/custom_navBar.dart';
+import 'package:provider/provider.dart';
 
 class Products extends StatelessWidget {
   const Products({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final themeController = Provider.of<ThemeController>(context);
+    final size = MediaQuery.of(context).size;
+    final height = size.height;
+    final width = size.width;
     final List<Map<String, dynamic>> items = [
       {
         "image": "assets/images/cement.jpg",
@@ -48,46 +55,66 @@ class Products extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: ColorsManager.green,
+      backgroundColor: themeController.isLight
+          ? ColorsManager.white
+          : ColorsManager.green,
       appBar: AppBar(
-        backgroundColor: ColorsManager.green,
+        backgroundColor: themeController.isLight
+            ? ColorsManager.green
+            : ColorsManager.green,
         surfaceTintColor: Colors.transparent,
-        actions: const [
+        actions: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 12),
-            child: Icon(Icons.filter_list, color: ColorsManager.gold, size: 42),
+            child: Icon(
+              Icons.filter_list,
+              color: themeController.isLight
+                  ? ColorsManager.white
+                  : ColorsManager.gold,
+              size: 42,
+            ),
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 12),
             child: Icon(
               Icons.shopping_cart,
-              color: ColorsManager.gold,
+              color: themeController.isLight
+                  ? ColorsManager.white
+                  : ColorsManager.gold,
               size: 42,
             ),
           ),
         ],
-        leading: const Padding(
+        leading: Padding(
           padding: EdgeInsets.symmetric(horizontal: 12),
-          child: Icon(Icons.search, color: ColorsManager.gold, size: 42),
+          child: Icon(
+            Icons.search,
+            color: themeController.isLight
+                ? ColorsManager.white
+                : ColorsManager.gold,
+            size: 42,
+          ),
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text(
+            Text(
               "Cement",
               style: TextStyle(
-                color: ColorsManager.grey,
+                color: themeController.isLight
+                    ? ColorsManager.green
+                    : ColorsManager.grey,
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Expanded(
               child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   mainAxisSpacing: 16,
                   crossAxisSpacing: 16,
@@ -97,117 +124,151 @@ class Products extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final item = items[index];
                   return Container(
+                    height: 240.h,
+                    width: 160.w,
                     decoration: BoxDecoration(
-                      color: ColorsManager.green,
-                      border: Border.all(color: ColorsManager.gold, width: 2),
+                      color: themeController.isLight
+                          ? ColorsManager.white
+                          : ColorsManager.green,
+                      border: Border.all(
+                        color: themeController.isLight
+                            ? ColorsManager.green
+                            : ColorsManager.gold,
+                        width: 2,
+                      ),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+
                       children: [
                         ClipRRect(
-                          borderRadius: const BorderRadius.only(
+                          borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(14),
                             topRight: Radius.circular(14),
                           ),
                           child: Image.asset(
                             item["image"],
-                            height: 100,
+                            height: 100.h,
                             width: double.infinity,
                             fit: BoxFit.cover,
                           ),
                         ),
-                        const SizedBox(height: 12),
+
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 18.h,
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
                                 children: [
-                                  const Icon(
+                                  Icon(
                                     Icons.factory,
-                                    color: ColorsManager.white,
+                                    color: themeController.isLight
+                                        ? ColorsManager.green
+                                        : ColorsManager.white,
                                     size: 16,
                                   ),
-                                  const SizedBox(width: 6),
+                                  SizedBox(width: 6.w),
                                   Text(
                                     item["company"],
-                                    style: const TextStyle(
-                                      color: ColorsManager.white,
-                                      fontWeight: FontWeight.bold,
+                                    style: TextStyle(
+                                      color: themeController.isLight
+                                          ? ColorsManager.green
+                                          : ColorsManager.white,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12,
                                     ),
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 6),
+                              SizedBox(height: 12.h),
                               Row(
                                 children: [
-                                  const Icon(
+                                  Icon(
                                     Icons.location_on,
-                                    color: ColorsManager.white,
+                                    color: themeController.isLight
+                                        ? ColorsManager.green
+                                        : ColorsManager.white,
                                     size: 16,
                                   ),
-                                  const SizedBox(width: 6),
+                                  SizedBox(width: 6.w),
                                   Text(
                                     item["location"],
-                                    style: const TextStyle(
-                                      color: ColorsManager.white,
+                                    style: TextStyle(
+                                      color: themeController.isLight
+                                          ? ColorsManager.green
+                                          : ColorsManager.white,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12,
                                     ),
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 6),
+                              SizedBox(height: 12.h),
                               Row(
                                 children: [
-                                  const Icon(
+                                  Icon(
                                     Icons.attach_money,
-                                    color: ColorsManager.white,
+                                    color: themeController.isLight
+                                        ? ColorsManager.green
+                                        : ColorsManager.white,
+                                    fontWeight: FontWeight.w500,
                                     size: 16,
                                   ),
-                                  const SizedBox(width: 6),
+                                  SizedBox(width: 6.w),
                                   Text(
                                     item["price"],
-                                    style: const TextStyle(
-                                      color: ColorsManager.white,
+                                    style: TextStyle(
+                                      color: themeController.isLight
+                                          ? ColorsManager.green
+                                          : ColorsManager.white,
                                       fontWeight: FontWeight.w500,
+                                      fontSize: 12,
                                     ),
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 8),
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: ColorsManager.gold,
-                                    foregroundColor: ColorsManager.green,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => ProductDetailsPage(
-                                          image: item["image"],
-                                          company: item["company"],
-                                          location: item["location"],
-                                          price: item["price"],
-                                          stock: "400 ton",
-                                          description:
-                                              "klam klam klam klam kteeeer",
-                                          delivery: true,
-                                          sellOnCredit: false,
-                                        ),
+                              SizedBox(height: 30.h),
+                              Center(
+                                child: SizedBox(
+                                  width: 120.w,
+                                  height: 20.h,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: ColorsManager.gold,
+                                      foregroundColor: ColorsManager.green,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
                                       ),
-                                    );
-                                  },
-                                  child: const Text(
-                                    "More Details",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => ProductDetailsPage(
+                                            image: item["image"],
+                                            company: item["company"],
+                                            location: item["location"],
+                                            price: item["price"],
+                                            stock: "400 ton",
+                                            description:
+                                                "klam klam klam klam kteeeer",
+                                            delivery: true,
+                                            sellOnCredit: false,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: Text(
+                                      "More Details",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 11,
+                                      ),
                                     ),
                                   ),
                                 ),

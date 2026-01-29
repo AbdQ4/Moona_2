@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
 import 'package:moona/view/contractor/contractor_category_page.dart';
+import 'package:provider/provider.dart';
 
 class ContructorHomePage extends StatefulWidget {
   const ContructorHomePage({super.key});
@@ -12,6 +14,7 @@ class ContructorHomePage extends StatefulWidget {
 class _ContructorHomePageState extends State<ContructorHomePage> {
   @override
   Widget build(BuildContext context) {
+    final themeController = Provider.of<ThemeController>(context);
     final size = MediaQuery.of(context).size;
     final height = size.height;
     final width = size.width;
@@ -21,7 +24,7 @@ class _ContructorHomePageState extends State<ContructorHomePage> {
       {"title": "Electrical & Lighting", "image": "assets/images/2.jpg"},
       {"title": "Finishing Materials", "image": "assets/images/3.jpg"},
       {"title": "Plumbing", "image": "assets/images/4.jpg"},
-      {"title": "Construction Tools", "image": "assets/images/5.jpg"},
+      {"title": "ruction Tools", "image": "assets/images/5.jpg"},
     ];
 
     final Map<String, List<Map<String, String>>> categoryItems = {
@@ -47,7 +50,7 @@ class _ContructorHomePageState extends State<ContructorHomePage> {
         {"name": "Taps", "image": "assets/images/tap.png"},
         {"name": "Valves", "image": "assets/images/valve.png"},
       ],
-      "Construction Tools": [
+      "ruction Tools": [
         {"name": "Hammer", "image": "assets/images/hammer.png"},
         {"name": "Drill", "image": "assets/images/drill.png"},
         {"name": "Saw", "image": "assets/images/saw.png"},
@@ -55,18 +58,31 @@ class _ContructorHomePageState extends State<ContructorHomePage> {
     };
 
     return Scaffold(
-      backgroundColor: ColorsManager.green,
+      backgroundColor: themeController.isLight
+          ? ColorsManager.white
+          : ColorsManager.green,
       appBar: AppBar(
+        backgroundColor: themeController.isLight
+            ? ColorsManager.green
+            : ColorsManager.green,
         leading: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-          child: Icon(Icons.language, color: ColorsManager.gold, size: 42),
+          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+          child: Icon(
+            Icons.language,
+            color: themeController.isLight
+                ? ColorsManager.white
+                : ColorsManager.gold,
+            size: 42,
+          ),
         ),
         actions: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
             child: Icon(
               Icons.shopping_cart,
-              color: ColorsManager.gold,
+              color: themeController.isLight
+                  ? ColorsManager.white
+                  : ColorsManager.gold,
               size: 42,
             ),
           ),
@@ -74,7 +90,7 @@ class _ContructorHomePageState extends State<ContructorHomePage> {
       ),
 
       body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 42, horizontal: 12),
+        padding: EdgeInsets.symmetric(vertical: 42, horizontal: 12),
         child: SizedBox(
           height: height * 0.7,
           child: GridView.builder(
@@ -103,7 +119,12 @@ class _ContructorHomePageState extends State<ContructorHomePage> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: ColorsManager.gold, width: 2),
+                    border: Border.all(
+                      color: themeController.isLight
+                          ? ColorsManager.green
+                          : ColorsManager.gold,
+                      width: 2,
+                    ),
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
