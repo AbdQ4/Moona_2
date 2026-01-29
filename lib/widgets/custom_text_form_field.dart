@@ -11,18 +11,21 @@ class CustomTextFormField extends StatelessWidget {
     required this.prefixIconPath,
     this.validator,
     this.controller,
+    this.autovalidateMode,
   });
 
   final String label;
   final String prefixIconPath;
   final String? Function(String?)? validator;
   final TextEditingController? controller;
+  final AutovalidateMode? autovalidateMode;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: REdgeInsets.symmetric(vertical: 10),
       child: TextFormField(
+        autovalidateMode: autovalidateMode,
         validator: validator,
         controller: controller,
         style: GoogleFonts.inter(color: ColorsManager.green),
