@@ -6,6 +6,7 @@ import 'package:moona/core/theme_manager.dart';
 import 'package:moona/view/auth/auth_redirect.dart';
 import 'package:moona/view/auth/login_screen.dart';
 import 'package:moona/view/auth/signup_screen.dart';
+import 'package:moona/view/auth/update_password.dart';
 import 'package:provider/provider.dart';
 
 class Moona extends StatelessWidget {

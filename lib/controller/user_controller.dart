@@ -525,4 +525,20 @@ class UserController extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  /// ===========================
+  /// Get Password Token
+  /// =========================
+
+  Future<void> requestResetToken({
+    required String email,
+    required ThemeController themeController,
+    required BuildContext context,
+  }) async {
+    try {
+      await supabase.auth.resetPasswordForEmail(email);
+    } catch (e) {
+      debugPrint("Error requesting reset token: $e");
+    }
+  }
 }
