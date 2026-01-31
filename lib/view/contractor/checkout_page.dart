@@ -1,30 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:moona/controller/chekout_controller.dart';
 import 'package:provider/provider.dart';
+
 import 'package:moona/controller/cart_provider.dart';
 import 'package:moona/controller/theme_controller.dart';
+
 import 'package:moona/core/colors_manager.dart';
+import 'package:moona/core/text_style.dart';
+import 'package:moona/view/contractor/card_detailes_page.dart';
+import 'package:moona/view/contractor/location_picker.dart';
 
-class CheckoutPage extends StatefulWidget {
+class CheckoutPage extends StatelessWidget {
   const CheckoutPage({super.key});
-
-  @override
-  State<CheckoutPage> createState() => _CheckoutPageState();
-}
-
-class _CheckoutPageState extends State<CheckoutPage> {
-  int selectedPayment = 0; // 0 = card , 1 = cash
-
-  final double taxRate = 0.05;
-  final double shippingFees = 255;
 
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<CartProvider>(context);
     final theme = Provider.of<ThemeController>(context);
-
-    final double tax = cart.subTotal * taxRate;
-    final double total = cart.subTotal + tax + shippingFees;
+    final controller = Provider.of<CheckoutController>(context);
 
     final bgColor = theme.isLight ? ColorsManager.white : ColorsManager.green;
     final mainTextColor = theme.isLight
@@ -34,172 +28,217 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
     return Scaffold(
       backgroundColor: bgColor,
-
-      /// ================= AppBar =================
       appBar: AppBar(
-        backgroundColor: theme.isLight
-            ? ColorsManager.green
-            : ColorsManager.green,
-        surfaceTintColor: Colors.transparent,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: accentColor, size: 28),
-          onPressed: () => Navigator.pop(context),
+        centerTitle: true,
+        iconTheme: IconThemeData(
+          color: theme.isLight ? ColorsManager.white : ColorsManager.gold,
         ),
         title: Text(
           "Checkout",
-          style: TextStyle(
-            color: accentColor,
-            fontSize: 28,
+          style: safeInter(
+            color: theme.isLight ? ColorsManager.green : ColorsManager.gold,
+            fontSize: 32.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
-        centerTitle: true,
       ),
-
-      /// ================= Body =================
-      body: Padding(
-        padding: EdgeInsets.all(16.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /// ================= Summary =================
-            Container(
-              padding: EdgeInsets.all(16.w),
-              decoration: BoxDecoration(
-                color: theme.isLight
-                    ? ColorsManager.white
-                    : ColorsManager.green,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: theme.isLight
-                      ? ColorsManager.green
-                      : ColorsManager.gold,
-                  width: 2,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: REdgeInsets.symmetric(horizontal: 16, vertical: 68),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /// ================= Summary =================
+              Container(
+                padding: EdgeInsets.all(16.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: accentColor, width: 2),
+                ),
+                child: Column(
+                  children: [
+                    _summaryRow(
+                      "Items",
+                      "Cement x${cart.totalItems}",
+                      mainTextColor,
+                    ),
+                    _summaryRow(
+                      "Tax",
+                      "${controller.tax(cart.subTotal).toStringAsFixed(0)} \$",
+                      mainTextColor,
+                    ),
+                    _summaryRow(
+                      "Shipping",
+                      "${controller.shippingFees.toStringAsFixed(0)} \$",
+                      mainTextColor,
+                    ),
+                    Divider(color: accentColor),
+                    _summaryRow(
+                      "Total",
+                      "${controller.total(cart.subTotal).toStringAsFixed(0)} \$",
+                      mainTextColor,
+                      isBold: true,
+                    ),
+                  ],
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+
+              SizedBox(height: 32.h),
+
+              /// ================= Location =================
+              Text(
+                "Delivery Location",
+                style: safeInter(
+                  color: mainTextColor,
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+
+              SizedBox(height: 12.h),
+
+              GestureDetector(
+                onTap: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const LocationPickerPage(),
+                    ),
+                  );
+
+                  if (result != null) {
+                    controller.setLocation(
+                      address: result["address"],
+                      latitude: result["lat"],
+                      longitude: result["lng"],
+                    );
+                  }
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 12.h,
+                    horizontal: 14.w,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: accentColor),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.location_on, color: accentColor),
+                      SizedBox(width: 8.w),
+                      Expanded(
+                        child: Text(
+                          controller.selectedAddress ??
+                              "Choose delivery location",
+                          style: safeInter(
+                            color: mainTextColor,
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              SizedBox(height: 32.h),
+
+              /// ================= Payment =================
+              Text(
+                "Payment Method",
+                style: safeInter(
+                  color: mainTextColor,
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+
+              SizedBox(height: 12.h),
+
+              Row(
                 children: [
-                  _summaryRow(
-                    title: "Items",
-                    value: "Cement x${cart.totalItems}",
-                    color: mainTextColor,
+                  _paymentOption(
+                    title: "Pay with card",
+                    value: 0,
+                    controller: controller,
+                    theme: theme,
                   ),
-                  _summaryRow(
-                    title: "Tax",
-                    value: "${tax.toStringAsFixed(0)} \$",
-                    color: mainTextColor,
-                  ),
-                  _summaryRow(
-                    title: "Shipping",
-                    value: "${shippingFees.toStringAsFixed(0)} \$",
-                    color: mainTextColor,
-                  ),
-                  Divider(color: accentColor),
-                  _summaryRow(
-                    title: "Total",
-                    value: "${total.toStringAsFixed(0)} \$",
-                    color: mainTextColor,
-                    isBold: true,
+                  SizedBox(width: 24.w),
+                  _paymentOption(
+                    title: "Pay with cash",
+                    value: 1,
+                    controller: controller,
+                    theme: theme,
                   ),
                 ],
               ),
-            ),
 
-            SizedBox(height: 24.h),
+              SizedBox(height: 24.h),
 
-            /// ================= Location =================
-            Row(
-              children: [
-                Text(
-                  "Tap to add location :",
-                  style: TextStyle(color: mainTextColor, fontSize: 16),
-                ),
-                SizedBox(width: 12.w),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: theme.isLight
-                          ? ColorsManager.green
-                          : ColorsManager.gold,
+              /// ================= Card Button =================
+              if (controller.selectedPayment == 0)
+                SizedBox(
+                  width: double.infinity,
+                  height: 50.h,
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: accentColor,
+                      foregroundColor: ColorsManager.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(
-                    Icons.location_on,
-                    color: theme.isLight
-                        ? ColorsManager.green
-                        : ColorsManager.gold,
+                    icon: const Icon(Icons.credit_card),
+                    label: Text(
+                      "Enter your card details",
+                      style: safeInter(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const CardDetailesPage(),
+                        ),
+                      );
+                    },
                   ),
                 ),
-              ],
-            ),
 
-            SizedBox(height: 24.h),
+              SizedBox(height: 40.h),
 
-            /// ================= Payment =================
-            Row(
-              children: [
-                _paymentOption(title: "Pay with card", value: 0, theme: theme),
-                SizedBox(width: 20.w),
-                _paymentOption(title: "Pay with cash", value: 1, theme: theme),
-              ],
-            ),
-
-            SizedBox(height: 20.h),
-
-            /// ================= Card Button =================
-            if (selectedPayment == 0)
+              /// ================= Proceed =================
               SizedBox(
                 width: double.infinity,
-                height: 48.h,
-                child: ElevatedButton.icon(
+                height: 54.h,
+                child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: accentColor,
                     foregroundColor: ColorsManager.green,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(14),
                     ),
                   ),
-                  icon: const Icon(Icons.credit_card),
-                  label: Text(
-                    "Enter your card details",
-                    style: TextStyle(
+                  onPressed: () {
+                    if (!controller.canProceed(context)) return;
+
+                    // lat , lng , selectedAddress
+                    // ابعتهم للـ backend
+                  },
+                  child: Text(
+                    "Proceed",
+                    style: safeInter(
+                      fontSize: 20.sp,
                       fontWeight: FontWeight.bold,
-                      color: theme.isLight
-                          ? ColorsManager.green
-                          : ColorsManager.gold,
                     ),
                   ),
-                  onPressed: () {},
                 ),
               ),
-
-            const Spacer(),
-
-            /// ================= Proceed =================
-            SizedBox(
-              width: double.infinity,
-              height: 52.h,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: accentColor,
-                  foregroundColor: ColorsManager.green,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                onPressed: () {
-                  // Place order
-                },
-                child: const Text(
-                  "Proceed",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -207,30 +246,30 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   /// ================= Components =================
 
-  Widget _summaryRow({
-    required String title,
-    required String value,
-    required Color color,
+  Widget _summaryRow(
+    String title,
+    String value,
+    Color color, {
     bool isBold = false,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: EdgeInsets.symmetric(vertical: 6.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            "$title :",
-            style: TextStyle(
+            "$title:",
+            style: safeInter(
               color: color,
-              fontSize: 16,
+              fontSize: 16.sp,
               fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
             ),
           ),
           Text(
             value,
-            style: TextStyle(
+            style: safeInter(
               color: color,
-              fontSize: 16,
+              fontSize: 16.sp,
               fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
             ),
           ),
@@ -242,27 +281,25 @@ class _CheckoutPageState extends State<CheckoutPage> {
   Widget _paymentOption({
     required String title,
     required int value,
+    required CheckoutController controller,
     required ThemeController theme,
   }) {
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedPayment = value;
-        });
-      },
+      onTap: () => controller.selectPayment(value),
       child: Row(
         children: [
           Icon(
-            selectedPayment == value
+            controller.selectedPayment == value
                 ? Icons.radio_button_checked
                 : Icons.radio_button_off,
             color: ColorsManager.gold,
           ),
-          SizedBox(width: 6),
+          SizedBox(width: 6.w),
           Text(
             title,
-            style: TextStyle(
+            style: safeInter(
               color: theme.isLight ? ColorsManager.green : ColorsManager.white,
+              fontSize: 14.sp,
             ),
           ),
         ],

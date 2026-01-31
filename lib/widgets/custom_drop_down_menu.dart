@@ -44,7 +44,7 @@ class CustomDropDownMenu extends StatelessWidget {
           value: value1,
           label: label1,
           style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all(
+            foregroundColor: WidgetStateProperty.all(
               themeController.isLight
                   ? ColorsManager.green
                   : ColorsManager.white,
@@ -55,7 +55,7 @@ class CustomDropDownMenu extends StatelessWidget {
           value: value2,
           label: label2,
           style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all(
+            foregroundColor: WidgetStateProperty.all(
               themeController.isLight
                   ? ColorsManager.green
                   : ColorsManager.white,
@@ -72,7 +72,7 @@ class CustomDropDownMenu extends StatelessWidget {
             : ColorsManager.white,
       ),
       menuStyle: MenuStyle(
-        backgroundColor: MaterialStateProperty.all(
+        backgroundColor: WidgetStateProperty.all(
           themeController.isLight ? ColorsManager.white : ColorsManager.green,
         ),
       ),

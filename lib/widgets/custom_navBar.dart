@@ -8,8 +8,7 @@ class CustomNavbar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTab;
 
-  CustomNavbar({Key? key, required this.currentIndex, required this.onTab})
-    : super(key: key);
+  const CustomNavbar({super.key, required this.currentIndex, required this.onTab});
 
   @override
   Widget build(BuildContext context) {

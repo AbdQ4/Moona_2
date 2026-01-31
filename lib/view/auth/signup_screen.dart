@@ -13,7 +13,6 @@ import 'package:moona/model/user_model.dart';
 import 'package:moona/widgets/custom_text_form_field.dart';
 import 'package:moona/widgets/password_text_field.dart';
 import 'package:provider/provider.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -177,8 +176,8 @@ class _SignupScreenState extends State<SignupScreen> {
                       groupValue: userRoleController.selectedRole,
                       onChanged: userRoleController.changeRole,
                       fillColor: themeController.isLight
-                          ? MaterialStateProperty.all(ColorsManager.green)
-                          : MaterialStateProperty.all(ColorsManager.white),
+                          ? WidgetStateProperty.all(ColorsManager.green)
+                          : WidgetStateProperty.all(ColorsManager.white),
                     ),
                     Text(
                       "Contractor",
@@ -194,8 +193,8 @@ class _SignupScreenState extends State<SignupScreen> {
                       groupValue: userRoleController.selectedRole,
                       onChanged: userRoleController.changeRole,
                       fillColor: themeController.isLight
-                          ? MaterialStateProperty.all(ColorsManager.green)
-                          : MaterialStateProperty.all(ColorsManager.white),
+                          ? WidgetStateProperty.all(ColorsManager.green)
+                          : WidgetStateProperty.all(ColorsManager.white),
                     ),
                     Text(
                       "Supplier",

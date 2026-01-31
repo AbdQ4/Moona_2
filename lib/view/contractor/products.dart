@@ -87,13 +87,7 @@ class Products extends StatelessWidget {
         ],
         leading: Padding(
           padding: EdgeInsets.symmetric(horizontal: 12),
-          child: Icon(
-            Icons.search,
-            color: themeController.isLight
-                ? ColorsManager.white
-                : ColorsManager.gold,
-            size: 42,
-          ),
+          child: BackButton(color: themeController.isLight ? ColorsManager.green : ColorsManager.gold, )
         ),
       ),
       body: Padding(

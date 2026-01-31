@@ -549,7 +549,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                                           ),
                                           Switch(
                                             value: delivery,
-                                            activeColor: themeController.isLight
+                                            activeThumbColor: themeController.isLight
                                                 ? ColorsManager.green
                                                 : ColorsManager.gold,
                                             onChanged: (val) {
@@ -576,7 +576,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                                           ),
                                           Switch(
                                             value: credit,
-                                            activeColor: themeController.isLight
+                                            activeThumbColor: themeController.isLight
                                                 ? ColorsManager.green
                                                 : ColorsManager.gold,
                                             onChanged: (val) {

@@ -1,18 +1,19 @@
 class CartItem {
   final String id;
-  final String image;
   final String name;
-  final double pricePerTon;
-
+  final double price;
+   final String image;
   int quantity;
 
   CartItem({
     required this.id,
-    required this.image,
     required this.name,
-    required this.pricePerTon,
-    this.quantity = 1,
+    required this.price,
+    this.quantity = 1, required this.image, 
   });
 
-  double get totalPrice => pricePerTon * quantity;
+  double get totalPrice => price * quantity;
 }
+
+
+

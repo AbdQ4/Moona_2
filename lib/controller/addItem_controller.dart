@@ -150,17 +150,17 @@ class AdditemProvider with ChangeNotifier {
           .select('id, name')
           .eq('id', productId);
 
-      debugPrint(">>> findResult (eq as-is) -> ${findResult}");
+      debugPrint(">>> findResult (eq as-is) -> $findResult");
 
       // 2) If nothing found, try alternative types (string / int)
-      if ((findResult == null || (findResult is List && findResult.isEmpty))) {
+      if (((findResult.isEmpty))) {
         // try string version
         final strId = productId.toString();
         final findStr = await _supabase
             .from('products')
             .select('id, name')
             .eq('id', strId);
-        debugPrint(">>> findResult (eq string) -> ${findStr}");
+        debugPrint(">>> findResult (eq string) -> $findStr");
 
         // try numeric version if productId looks numeric
         if (int.tryParse(strId) != null) {
@@ -169,7 +169,7 @@ class AdditemProvider with ChangeNotifier {
               .from('products')
               .select('id, name')
               .eq('id', intId);
-          debugPrint(">>> findResult (eq int) -> ${findInt}");
+          debugPrint(">>> findResult (eq int) -> $findInt");
         }
       }
 
@@ -185,7 +185,7 @@ class AdditemProvider with ChangeNotifier {
       // Some Supabase setups return [] on delete success or return deleted rows.
       final deletedCount = (deleteResult is List)
           ? deleteResult.length
-          : (deleteResult != null ? 1 : 0);
+          : (1);
       if (deletedCount > 0) {
         _products.removeWhere(
           (p) => p['id'].toString() == productId.toString(),
@@ -200,7 +200,7 @@ class AdditemProvider with ChangeNotifier {
             .select('id')
             .eq('id', productId);
         debugPrint(">>> post-delete check select -> $check");
-        if (check == null || (check is List && check.isEmpty)) {
+        if ((check.isEmpty)) {
           // row not found after delete, treat as success
           _products.removeWhere(
             (p) => p['id'].toString() == productId.toString(),

@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 class SupplierController with ChangeNotifier {
-  List<String> _suppliers = [];
+  final List<String> _suppliers = [];
 
   List<String> get suppliers => _suppliers;
 

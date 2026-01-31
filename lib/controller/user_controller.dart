@@ -203,7 +203,7 @@ class UserController extends ChangeNotifier {
             .eq("id", response.session!.user.id)
             .single();
 
-        final role = userData?["role"] as String? ?? user!.role;
+        final role = userData["role"] as String? ?? user!.role;
 
         if (role == "contractor") {
           Navigator.pushReplacementNamed(
