@@ -4,6 +4,7 @@ import 'package:moona/controller/cart_provider.dart';
 import 'package:moona/controller/checkbox_controller.dart';
 import 'package:moona/controller/chekout_controller.dart';
 import 'package:moona/controller/payment_controller.dart';
+import 'package:moona/controller/quantity_dialog_provider.dart';
 import 'package:moona/controller/supplier_controller.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/controller/license_controller.dart';
@@ -41,6 +42,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => CardDetailsController()),
         ChangeNotifierProvider(create: (_) => CheckoutController()),
+        ChangeNotifierProvider(create: (_) => QuantityDialogProvider(pricePerTon: 1000)),
         
       ],
       child: Moona(),

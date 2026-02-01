@@ -16,8 +16,9 @@ class YourCartPage extends StatelessWidget {
     final theme = Provider.of<ThemeController>(context);
 
     return Scaffold(
-      backgroundColor:
-          theme.isLight ? ColorsManager.white : ColorsManager.green,
+      backgroundColor: theme.isLight
+          ? ColorsManager.white
+          : ColorsManager.green,
 
       /// ================= AppBar =================
       appBar: AppBar(
@@ -26,20 +27,16 @@ class YourCartPage extends StatelessWidget {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: theme.isLight
-                ? ColorsManager.white
-                : ColorsManager.gold,
-            size: 36,
+            color: theme.isLight ? ColorsManager.white : ColorsManager.gold,
+            size: 36.sp,
           ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           "Your Cart",
           style: TextStyle(
-            color: theme.isLight
-                ? ColorsManager.white
-                : ColorsManager.gold,
-            fontSize: 30,
+            color: theme.isLight ? ColorsManager.white : ColorsManager.gold,
+            fontSize: 30.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -54,11 +51,14 @@ class YourCartPage extends StatelessWidget {
             /// ================= Grid =================
             Expanded(
               child: cart.items.isEmpty
-                  ? const Center(
+                  ? Center(
                       child: Text(
                         "Cart is empty",
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 24.sp,
+                          color: theme.isLight
+                              ? ColorsManager.green
+                              : ColorsManager.gold,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -67,11 +67,11 @@ class YourCartPage extends StatelessWidget {
                       itemCount: cart.items.length,
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 16,
-                        crossAxisSpacing: 16,
-                        childAspectRatio: 0.65,
-                      ),
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16,
+                            childAspectRatio: 0.65,
+                          ),
                       itemBuilder: (context, index) {
                         final item = cart.items[index];
 
@@ -93,13 +93,12 @@ class YourCartPage extends StatelessWidget {
                             children: [
                               /// Image
                               ClipRRect(
-                                borderRadius:
-                                    const BorderRadius.vertical(
+                                borderRadius: const BorderRadius.vertical(
                                   top: Radius.circular(14),
                                 ),
                                 child: Image.asset(
                                   item.image,
-                                  height: 100.h,
+                                  height: 100.sp,
                                   width: double.infinity,
                                   fit: BoxFit.cover,
                                 ),
@@ -108,8 +107,7 @@ class YourCartPage extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.all(8.w),
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     /// Quantity
                                     Row(
@@ -119,8 +117,9 @@ class YourCartPage extends StatelessWidget {
                                         Container(
                                           decoration: BoxDecoration(
                                             color: ColorsManager.grey,
-                                            borderRadius:
-                                                BorderRadius.circular(8),
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
                                           ),
                                           child: Row(
                                             children: [
@@ -133,15 +132,13 @@ class YourCartPage extends StatelessWidget {
                                               Padding(
                                                 padding:
                                                     const EdgeInsets.symmetric(
-                                                  horizontal: 8,
-                                                ),
+                                                      horizontal: 8,
+                                                    ),
                                                 child: Text(
                                                   item.quantity.toString(),
                                                   style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold,
-                                                    color:
-                                                        ColorsManager.green,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: ColorsManager.green,
                                                   ),
                                                 ),
                                               ),
@@ -157,12 +154,11 @@ class YourCartPage extends StatelessWidget {
 
                                         /// Max
                                         GestureDetector(
-                                          onTap: () => cart.setMaxQuantity(
-                                            item.id,
-                                          ),
+                                          onTap: () =>
+                                              cart.setMaxQuantity(item.id),
                                           child: Container(
-                                            height: 36.h,
-                                            width: 46.w,
+                                            height: 36.sp,
+                                            width: 46.sp,
                                             decoration: BoxDecoration(
                                               color: ColorsManager.gold,
                                               borderRadius:
@@ -173,8 +169,7 @@ class YourCartPage extends StatelessWidget {
                                                 'Max',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
-                                                  color:
-                                                      ColorsManager.green,
+                                                  color: ColorsManager.green,
                                                 ),
                                               ),
                                             ),
@@ -183,7 +178,7 @@ class YourCartPage extends StatelessWidget {
                                       ],
                                     ),
 
-                                    SizedBox(height: 10.h),
+                                    SizedBox(height: 10.sp),
 
                                     /// Price
                                     Text(
@@ -196,46 +191,42 @@ class YourCartPage extends StatelessWidget {
                                       ),
                                     ),
 
-                                    SizedBox(height: 70.h),
+                                    SizedBox(height: 70.sp),
 
                                     /// Buy + Remove
                                     Row(
                                       children: [
                                         SizedBox(
-                                          height: 34.h,
-                                          width: 120.w,
+                                          height: 34.sp,
+                                          width: 120.sp,
                                           child: ElevatedButton(
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor:
                                                   ColorsManager.gold,
                                               foregroundColor:
                                                   ColorsManager.green,
-                                              shape:
-                                                  RoundedRectangleBorder(
+                                              shape: RoundedRectangleBorder(
                                                 borderRadius:
-                                                    BorderRadius.circular(
-                                                  12,
-                                                ),
+                                                    BorderRadius.circular(12),
                                               ),
                                             ),
                                             onPressed: () {},
-                                            child: const Text(
+                                            child: Text(
                                               "Buy Now",
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 12,
+                                                fontSize: 12.sp,
                                               ),
                                             ),
                                           ),
                                         ),
                                         const Spacer(),
                                         GestureDetector(
-                                          onTap: () =>
-                                              cart.removeItem(item.id),
-                                          child: const Icon(
+                                          onTap: () => cart.removeItem(item.id),
+                                          child: Icon(
                                             Icons.delete,
                                             color: Colors.red,
-                                            size: 22,
+                                            size: 22.sp,
                                           ),
                                         ),
                                       ],
@@ -253,7 +244,7 @@ class YourCartPage extends StatelessWidget {
             /// ================= Proceed =================
             SizedBox(
               width: double.infinity,
-              height: 50,
+              height: 50.sp,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: theme.isLight
@@ -276,10 +267,10 @@ class YourCartPage extends StatelessWidget {
                           ),
                         );
                       },
-                child: const Text(
+                child: Text(
                   "Proceed",
                   style: TextStyle(
-                    fontSize: 22,
+                    fontSize: 22.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -300,8 +291,8 @@ Widget _iconButton(String text, VoidCallback onTap) {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       child: Text(
         text,
-        style: const TextStyle(
-          fontSize: 20,
+        style: TextStyle(
+          fontSize: 20.sp,
           fontWeight: FontWeight.bold,
           color: ColorsManager.green,
         ),

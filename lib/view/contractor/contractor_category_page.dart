@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
 import 'package:moona/view/contractor/products.dart';
@@ -17,9 +18,6 @@ class ContractorCategoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeController = Provider.of<ThemeController>(context);
-    final size = MediaQuery.of(context).size;
-    final height = size.height;
-    final width = size.width;
 
     return Scaffold(
       backgroundColor: themeController.isLight
@@ -47,16 +45,16 @@ class ContractorCategoryPage extends StatelessWidget {
           ? Center(
               child: Text(
                 "No items in $categoryName",
-                style: TextStyle(color: ColorsManager.grey, fontSize: 18),
+                style: TextStyle(color: ColorsManager.grey, fontSize: 18.sp),
               ),
             )
           : Padding(
-              padding: const EdgeInsets.symmetric(vertical: 42, horizontal: 8),
+              padding: EdgeInsets.symmetric(vertical: 42.sp, horizontal: 8.sp),
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  mainAxisSpacing: height * 0.04,
-                  crossAxisSpacing: width * 0.08,
+                  mainAxisSpacing: 25.sp,
+                  crossAxisSpacing: 20.sp,
                 ),
                 itemCount: items.length,
                 itemBuilder: (context, index) {
@@ -75,7 +73,7 @@ class ContractorCategoryPage extends StatelessWidget {
                           color: themeController.isLight
                               ? ColorsManager.green
                               : ColorsManager.gold,
-                          width: 2,
+                          width: 2.sp,
                         ),
                       ),
                       child: ClipRRect(
@@ -91,14 +89,14 @@ class ContractorCategoryPage extends StatelessWidget {
                             ),
                             Container(
                               width: double.infinity,
-                              height: 50,
+                              height: 50.sp,
                               color: ColorsManager.black.withOpacity(0.7),
                               child: Center(
                                 child: Text(
                                   item["name"]!,
                                   style: TextStyle(
                                     color: ColorsManager.gold,
-                                    fontSize: 14,
+                                    fontSize: 14.sp,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),

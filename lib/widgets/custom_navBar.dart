@@ -20,7 +20,7 @@ class CustomNavbar extends StatelessWidget {
       currentIndex: currentIndex,
       selectedItemColor: themeController.isLight
           ? ColorsManager.white
-          : ColorsManager.gold,
+          : ColorsManager.green,
       selectedLabelStyle: GoogleFonts.inter(
         color: themeController.isLight
             ? ColorsManager.white

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
 import 'package:moona/view/contractor/your_cart_page.dart';
@@ -45,7 +46,7 @@ class ProductDetailsPage extends StatelessWidget {
             color: themeController.isLight
                 ? ColorsManager.white
                 : ColorsManager.gold,
-            size: 42,
+            size: 42.sp,
           ),
           onPressed: () => Navigator.pop(context),
         ),
@@ -55,26 +56,26 @@ class ProductDetailsPage extends StatelessWidget {
             color: themeController.isLight
                 ? ColorsManager.white
                 : ColorsManager.gold,
-            fontSize: 24,
+            fontSize: 24.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
         actions: [
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            padding: EdgeInsets.symmetric(vertical: 8.sp, horizontal: 12.sp),
             child: Icon(
               Icons.shopping_cart,
               color: themeController.isLight
                   ? ColorsManager.white
                   : ColorsManager.gold,
-              size: 42,
+              size: 42.sp,
             ),
           ),
         ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.sp),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -83,12 +84,12 @@ class ProductDetailsPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               child: Image.asset(
                 image,
-                height: 200,
+                height: 200.sp,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 16.sp),
 
             // Product Info
             Text(
@@ -98,20 +99,20 @@ class ProductDetailsPage extends StatelessWidget {
                     ? ColorsManager.green
                     : ColorsManager.white,
                 fontWeight: FontWeight.bold,
-                fontSize: 24,
+                fontSize: 24.sp,
               ),
             ),
-            SizedBox(height: 8),
+            SizedBox(height: 8.sp),
             Row(
               children: [
                 Icon(
                   Icons.location_on_rounded,
-                  size: 26,
+                  size: 26.sp,
                   color: themeController.isLight
                       ? ColorsManager.green
                       : ColorsManager.white,
                 ),
-                SizedBox(width: 4),
+                SizedBox(width: 4.sp),
                 Text(
                   location,
                   style: TextStyle(
@@ -119,12 +120,12 @@ class ProductDetailsPage extends StatelessWidget {
                         ? ColorsManager.green
                         : ColorsManager.white,
                     fontWeight: FontWeight.w500,
-                    fontSize: 20,
+                    fontSize: 20.sp,
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 12),
+            SizedBox(height: 12.sp),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -132,12 +133,12 @@ class ProductDetailsPage extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.attach_money,
-                      size: 26,
+                      size: 26.sp,
                       color: themeController.isLight
                           ? ColorsManager.green
                           : ColorsManager.white,
                     ),
-                    SizedBox(width: 4),
+                    SizedBox(width: 4.sp),
                     Text(
                       price,
                       style: TextStyle(
@@ -145,7 +146,7 @@ class ProductDetailsPage extends StatelessWidget {
                             ? ColorsManager.green
                             : ColorsManager.white,
                         fontWeight: FontWeight.w500,
-                        fontSize: 20,
+                        fontSize: 20.sp,
                       ),
                     ),
                   ],
@@ -159,10 +160,10 @@ class ProductDetailsPage extends StatelessWidget {
                             ? ColorsManager.green
                             : ColorsManager.white,
                         fontWeight: FontWeight.w500,
-                        fontSize: 20,
+                        fontSize: 20.sp,
                       ),
                     ),
-                    SizedBox(width: 4),
+                    SizedBox(width: 4.sp),
                     Text(
                       stock,
                       style: TextStyle(
@@ -170,14 +171,14 @@ class ProductDetailsPage extends StatelessWidget {
                             ? ColorsManager.green
                             : ColorsManager.white,
                         fontWeight: FontWeight.w500,
-                        fontSize: 20,
+                        fontSize: 20.sp,
                       ),
                     ),
                   ],
                 ),
               ],
             ),
-            SizedBox(height: 8),
+            SizedBox(height: 8.sp),
             // Description
             Text(
               "Description",
@@ -186,14 +187,14 @@ class ProductDetailsPage extends StatelessWidget {
                     ? ColorsManager.green
                     : ColorsManager.white,
                 fontWeight: FontWeight.bold,
-                fontSize: 20,
+                fontSize: 20.sp,
               ),
             ),
             SizedBox(height: 8),
             Container(
-              height: 96,
+              height: 96.sp,
               width: double.infinity,
-              padding: EdgeInsets.all(12),
+              padding: EdgeInsets.all(12.sp),
               decoration: BoxDecoration(
                 border: Border.all(
                   color: themeController.isLight
@@ -211,7 +212,7 @@ class ProductDetailsPage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 24),
+            SizedBox(height: 24.sp),
 
             // Delivery & Credit
             Row(
@@ -226,7 +227,7 @@ class ProductDetailsPage extends StatelessWidget {
                             ? ColorsManager.green
                             : ColorsManager.white,
                         fontWeight: FontWeight.w600,
-                        fontSize: 20,
+                        fontSize: 20.sp,
                       ),
                     ),
                     Icon(
@@ -244,7 +245,7 @@ class ProductDetailsPage extends StatelessWidget {
                             ? ColorsManager.green
                             : ColorsManager.white,
                         fontWeight: FontWeight.w600,
-                        fontSize: 20,
+                        fontSize: 20.sp,
                       ),
                     ),
                     Icon(
@@ -255,7 +256,7 @@ class ProductDetailsPage extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 130),
+            SizedBox(height: 90.sp),
 
             // Buttons
             ElevatedButton(
@@ -266,7 +267,7 @@ class ProductDetailsPage extends StatelessWidget {
                 foregroundColor: themeController.isLight
                     ? ColorsManager.green
                     : ColorsManager.green,
-                minimumSize: Size(double.infinity, 48),
+                minimumSize: Size(double.infinity, 48.sp),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -279,10 +280,10 @@ class ProductDetailsPage extends StatelessWidget {
               },
               child: Text(
                 "Add to Cart",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.sp),
               ),
             ),
-            SizedBox(height: 12),
+            SizedBox(height: 12.sp),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: themeController.isLight
@@ -291,7 +292,7 @@ class ProductDetailsPage extends StatelessWidget {
                 foregroundColor: themeController.isLight
                     ? ColorsManager.white
                     : ColorsManager.green,
-                minimumSize: Size(double.infinity, 48),
+                minimumSize: Size(double.infinity, 48.sp),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -304,7 +305,7 @@ class ProductDetailsPage extends StatelessWidget {
               },
               child: Text(
                 "Buy Now",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.sp),
               ),
             ),
           ],

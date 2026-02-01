@@ -12,9 +12,7 @@ class Products extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeController = Provider.of<ThemeController>(context);
-    final size = MediaQuery.of(context).size;
-    final height = size.height;
-    final width = size.width;
+
     final List<Map<String, dynamic>> items = [
       {
         "image": "assets/images/cement.jpg",
@@ -75,23 +73,27 @@ class Products extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12),
+            padding: EdgeInsets.symmetric(horizontal: 12.sp),
             child: Icon(
               Icons.shopping_cart,
               color: themeController.isLight
                   ? ColorsManager.white
                   : ColorsManager.gold,
-              size: 42,
+              size: 42.sp,
             ),
           ),
         ],
         leading: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12),
-          child: BackButton(color: themeController.isLight ? ColorsManager.green : ColorsManager.gold, )
+          padding: EdgeInsets.symmetric(horizontal: 12.sp),
+          child: BackButton(
+            color: themeController.isLight
+                ? ColorsManager.white
+                : ColorsManager.gold,
+          ),
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        padding: EdgeInsets.symmetric(vertical: 8.sp, horizontal: 12.sp),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -101,11 +103,11 @@ class Products extends StatelessWidget {
                 color: themeController.isLight
                     ? ColorsManager.green
                     : ColorsManager.grey,
-                fontSize: 32,
+                fontSize: 32.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 20.sp),
             Expanded(
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -118,8 +120,8 @@ class Products extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final item = items[index];
                   return Container(
-                    height: 240.h,
-                    width: 160.w,
+                    height: 240.sp,
+                    width: 160.sp,
                     decoration: BoxDecoration(
                       color: themeController.isLight
                           ? ColorsManager.white
@@ -143,7 +145,7 @@ class Products extends StatelessWidget {
                           ),
                           child: Image.asset(
                             item["image"],
-                            height: 100.h,
+                            height: 100.sp,
                             width: double.infinity,
                             fit: BoxFit.cover,
                           ),
@@ -151,8 +153,8 @@ class Products extends StatelessWidget {
 
                         Padding(
                           padding: EdgeInsets.symmetric(
-                            horizontal: 8.w,
-                            vertical: 18.h,
+                            horizontal: 8.sp,
+                            vertical: 18.sp,
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -164,9 +166,9 @@ class Products extends StatelessWidget {
                                     color: themeController.isLight
                                         ? ColorsManager.green
                                         : ColorsManager.white,
-                                    size: 16,
+                                    size: 16.sp,
                                   ),
-                                  SizedBox(width: 6.w),
+                                  SizedBox(width: 6.sp),
                                   Text(
                                     item["company"],
                                     style: TextStyle(
@@ -174,12 +176,12 @@ class Products extends StatelessWidget {
                                           ? ColorsManager.green
                                           : ColorsManager.white,
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 12,
+                                      fontSize: 12.sp,
                                     ),
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 12.h),
+                              SizedBox(height: 12.sp),
                               Row(
                                 children: [
                                   Icon(
@@ -187,9 +189,9 @@ class Products extends StatelessWidget {
                                     color: themeController.isLight
                                         ? ColorsManager.green
                                         : ColorsManager.white,
-                                    size: 16,
+                                    size: 16.sp,
                                   ),
-                                  SizedBox(width: 6.w),
+                                  SizedBox(width: 6.sp),
                                   Text(
                                     item["location"],
                                     style: TextStyle(
@@ -197,12 +199,12 @@ class Products extends StatelessWidget {
                                           ? ColorsManager.green
                                           : ColorsManager.white,
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 12,
+                                      fontSize: 12.sp,
                                     ),
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 12.h),
+                              SizedBox(height: 12.sp),
                               Row(
                                 children: [
                                   Icon(
@@ -211,9 +213,9 @@ class Products extends StatelessWidget {
                                         ? ColorsManager.green
                                         : ColorsManager.white,
                                     fontWeight: FontWeight.w500,
-                                    size: 16,
+                                    size: 16.sp,
                                   ),
-                                  SizedBox(width: 6.w),
+                                  SizedBox(width: 6.sp),
                                   Text(
                                     item["price"],
                                     style: TextStyle(
@@ -221,16 +223,16 @@ class Products extends StatelessWidget {
                                           ? ColorsManager.green
                                           : ColorsManager.white,
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 12,
+                                      fontSize: 12.sp,
                                     ),
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 30.h),
+                              SizedBox(height: 30.sp),
                               Center(
                                 child: SizedBox(
-                                  width: 120.w,
-                                  height: 20.h,
+                                  width: 120.sp,
+                                  height: 20.sp,
                                   child: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: ColorsManager.gold,
@@ -261,7 +263,7 @@ class Products extends StatelessWidget {
                                       "More Details",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 11,
+                                        fontSize: 11.sp,
                                       ),
                                     ),
                                   ),
