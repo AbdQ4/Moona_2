@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
 import 'package:moona/view/contractor/contractor_category_page.dart';
+import 'package:provider/provider.dart';
 
 class ContructorHomePage extends StatefulWidget {
   const ContructorHomePage({super.key});
@@ -12,9 +15,7 @@ class ContructorHomePage extends StatefulWidget {
 class _ContructorHomePageState extends State<ContructorHomePage> {
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final height = size.height;
-    final width = size.width;
+    final themeController = Provider.of<ThemeController>(context);
 
     final List<Map<String, String>> categories = [
       {"title": "Building Materials", "image": "assets/images/1.jpg"},
@@ -55,89 +56,105 @@ class _ContructorHomePageState extends State<ContructorHomePage> {
     };
 
     return Scaffold(
-      backgroundColor: ColorsManager.green,
+      backgroundColor: themeController.isLight
+          ? ColorsManager.white
+          : ColorsManager.green,
       appBar: AppBar(
+        toolbarHeight: 65.sp,
+        backgroundColor: themeController.isLight
+            ? ColorsManager.green
+            : ColorsManager.green,
         leading: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-          child: Icon(Icons.language, color: ColorsManager.gold, size: 42),
+          padding: EdgeInsets.symmetric(vertical: 8.sp, horizontal: 12.sp),
+          child: Icon(
+            Icons.language,
+            color: themeController.isLight
+                ? ColorsManager.white
+                : ColorsManager.gold,
+            size: 42.sp,
+          ),
         ),
         actions: [
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            padding: EdgeInsets.symmetric(vertical: 8.sp, horizontal: 12.sp),
             child: Icon(
               Icons.shopping_cart,
-              color: ColorsManager.gold,
-              size: 42,
+              color: themeController.isLight
+                  ? ColorsManager.white
+                  : ColorsManager.gold,
+              size: 42.sp,
             ),
           ),
         ],
       ),
 
       body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 42, horizontal: 12),
-        child: SizedBox(
-          height: height * 0.7,
-          child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: height * 0.04,
-              crossAxisSpacing: width * 0.08,
-            ),
-            itemCount: categoryItems.length,
-            itemBuilder: (context, index) {
-              final category = categories[index];
-
-              final title = category["title"]!;
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => ContractorCategoryPage(
-                        categoryName: title,
-                        items: categoryItems[title] ?? [],
-                      ),
+        padding: EdgeInsets.symmetric(vertical: 42.sp, horizontal: 12.sp),
+        child: GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 25.sp,
+            crossAxisSpacing: 20.sp,
+          ),
+          itemCount: categoryItems.length,
+          itemBuilder: (context, index) {
+            final category = categories[index];
+        
+            final title = category["title"]!;
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ContractorCategoryPage(
+                      categoryName: title,
+                      items: categoryItems[title] ?? [],
                     ),
-                  );
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: ColorsManager.gold, width: 2),
                   ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: Stack(
-                      alignment: Alignment.bottomCenter,
-                      children: [
-                        Image.asset(
-                          category["image"]!,
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          height: double.infinity,
-                        ),
-                        Container(
-                          width: double.infinity,
-                          height: 50,
-                          color: ColorsManager.black.withOpacity(0.7),
-                          child: Center(
-                            child: Text(
-                              category["title"]!,
-                              style: TextStyle(
-                                color: ColorsManager.gold,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
+                );
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: themeController.isLight
+                        ? ColorsManager.green
+                        : ColorsManager.gold,
+                    width: 2.sp,
+                  ),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: [
+                      Image.asset(
+                        category["image"]!,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                      ),
+                      Container(
+                        width: double.infinity,
+                        height: 50.sp,
+                        color: ColorsManager.black.withOpacity(0.7),
+                        child: Center(
+                          child: Text(
+                            category["title"]!,
+                            style: TextStyle(
+                              color: ColorsManager.gold,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
 import 'package:moona/view/contractor/products.dart';
+import 'package:provider/provider.dart';
 
 class ContractorCategoryPage extends StatelessWidget {
   final String categoryName;
@@ -14,31 +17,44 @@ class ContractorCategoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final height = size.height;
-    final width = size.width;
+    final themeController = Provider.of<ThemeController>(context);
 
     return Scaffold(
-      backgroundColor: ColorsManager.green,
+      backgroundColor: themeController.isLight
+          ? ColorsManager.white
+          : ColorsManager.green,
       appBar: AppBar(
-        title: Text(categoryName, style: TextStyle(color: ColorsManager.gold)),
-        backgroundColor: ColorsManager.green,
-        iconTheme: IconThemeData(color: ColorsManager.gold),
+        iconTheme: IconThemeData(
+          color: themeController.isLight
+              ? ColorsManager.white
+              : ColorsManager.gold,
+        ),
+        title: Text(
+          categoryName,
+          style: TextStyle(
+            color: themeController.isLight
+                ? ColorsManager.white
+                : ColorsManager.gold,
+          ),
+        ),
+        backgroundColor: themeController.isLight
+            ? ColorsManager.green
+            : ColorsManager.green,
       ),
       body: items.isEmpty
           ? Center(
               child: Text(
                 "No items in $categoryName",
-                style: TextStyle(color: ColorsManager.grey, fontSize: 18),
+                style: TextStyle(color: ColorsManager.grey, fontSize: 18.sp),
               ),
             )
           : Padding(
-              padding: const EdgeInsets.symmetric(vertical: 42, horizontal: 8),
+              padding: EdgeInsets.symmetric(vertical: 42.sp, horizontal: 8.sp),
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  mainAxisSpacing: height * 0.04,
-                  crossAxisSpacing: width * 0.08,
+                  mainAxisSpacing: 25.sp,
+                  crossAxisSpacing: 20.sp,
                 ),
                 itemCount: items.length,
                 itemBuilder: (context, index) {
@@ -53,7 +69,12 @@ class ContractorCategoryPage extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: ColorsManager.gold, width: 2),
+                        border: Border.all(
+                          color: themeController.isLight
+                              ? ColorsManager.green
+                              : ColorsManager.gold,
+                          width: 2.sp,
+                        ),
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(16),
@@ -68,14 +89,14 @@ class ContractorCategoryPage extends StatelessWidget {
                             ),
                             Container(
                               width: double.infinity,
-                              height: 50,
+                              height: 50.sp,
                               color: ColorsManager.black.withOpacity(0.7),
                               child: Center(
                                 child: Text(
                                   item["name"]!,
                                   style: TextStyle(
                                     color: ColorsManager.gold,
-                                    fontSize: 14,
+                                    fontSize: 14.sp,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),

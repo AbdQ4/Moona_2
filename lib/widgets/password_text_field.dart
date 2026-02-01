@@ -6,7 +6,7 @@ import 'package:moona/core/assets_manager.dart';
 import '../core/colors_manager.dart';
 
 class PasswordTextField extends StatefulWidget {
-  PasswordTextField({super.key, required this.label, this.validator, this.controller});
+  const PasswordTextField({super.key, required this.label, this.validator, this.controller});
 
   final String label;
   final String? Function(String?)? validator;

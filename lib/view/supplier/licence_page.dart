@@ -61,7 +61,7 @@ class _LicencePageState extends State<LicencePage> {
     final userController = Provider.of<UserController>(
       context,
     ); // listen: true so UI updates when user is set
-    final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
+    final GlobalKey<SfPdfViewerState> pdfViewerKey = GlobalKey();
 
     return FutureBuilder<dynamic>(
       future: _loadUserFuture,
@@ -105,39 +105,8 @@ class _LicencePageState extends State<LicencePage> {
         // At this point either userController.user is set (fetchUserDetails set it)
         final UserModel curentUser = userController.user ?? snapshot.data;
 
-        // If there's still no user object
-        if (curentUser == null) {
-          return Scaffold(
-            appBar: _buildAppBar(themeController),
-            backgroundColor: themeController.isLight
-                ? ColorsManager.white
-                : ColorsManager.green,
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: REdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 24.h,
-                  ),
-                  child: Text(
-                    "No user profile found. Please log in again or contact support.",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.inter(
-                      fontSize: 18.sp,
-                      color: themeController.isLight
-                          ? ColorsManager.black
-                          : ColorsManager.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-
         // Build main UI with the loaded user
-        final licenseUrl = (curentUser.licenseUrl as String?)?.trim();
+        final licenseUrl = (curentUser.licenseUrl)?.trim();
         final hasLicense = licenseUrl != null && licenseUrl.isNotEmpty;
         final renewDate = curentUser.renewDate;
 
@@ -204,7 +173,7 @@ class _LicencePageState extends State<LicencePage> {
                         borderRadius: BorderRadius.circular(16.r),
                         child: SfPdfViewer.network(
                           licenseUrl,
-                          key: _pdfViewerKey,
+                          key: pdfViewerKey,
                         ),
                       ),
                     ),

@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/controller/user_controller.dart';
 import 'package:moona/core/text_style.dart';
 import 'package:moona/view/auth/login_screen.dart';
-import 'package:moona/view/auth/pending_screen.dart';
-import 'package:moona/view/contractor/contractor_main_layout.dart';
-import 'package:moona/view/supplier/supplier_main_layout.dart';
 import 'package:moona/widgets/custom_elevated_button.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

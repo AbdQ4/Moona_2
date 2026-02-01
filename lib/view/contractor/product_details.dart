@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
+import 'package:moona/view/contractor/your_cart_page.dart';
+import 'package:moona/widgets/quantityDialog.dart';
+
+import 'package:provider/provider.dart';
 
 class ProductDetailsPage extends StatelessWidget {
   final String image;
@@ -25,41 +31,51 @@ class ProductDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeController = Provider.of<ThemeController>(context);
+
     return Scaffold(
-      backgroundColor: ColorsManager.green,
+      backgroundColor: themeController.isLight
+          ? ColorsManager.white
+          : ColorsManager.green,
       appBar: AppBar(
         backgroundColor: ColorsManager.green,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back,
-            color: ColorsManager.gold,
-            size: 42,
+            color: themeController.isLight
+                ? ColorsManager.white
+                : ColorsManager.gold,
+            size: 42.sp,
           ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           "Cement - $company",
-          style: const TextStyle(
-            color: ColorsManager.gold,
-            fontSize: 24,
+          style: TextStyle(
+            color: themeController.isLight
+                ? ColorsManager.white
+                : ColorsManager.gold,
+            fontSize: 24.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            padding: EdgeInsets.symmetric(vertical: 8.sp, horizontal: 12.sp),
             child: Icon(
               Icons.shopping_cart,
-              color: ColorsManager.gold,
-              size: 42,
+              color: themeController.isLight
+                  ? ColorsManager.white
+                  : ColorsManager.gold,
+              size: 42.sp,
             ),
           ),
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.sp),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -68,42 +84,48 @@ class ProductDetailsPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               child: Image.asset(
                 image,
-                height: 200,
+                height: 200.sp,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.sp),
 
             // Product Info
             Text(
               "$company Cement",
-              style: const TextStyle(
-                color: ColorsManager.white,
+              style: TextStyle(
+                color: themeController.isLight
+                    ? ColorsManager.green
+                    : ColorsManager.white,
                 fontWeight: FontWeight.bold,
-                fontSize: 24,
+                fontSize: 24.sp,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.sp),
             Row(
               children: [
                 Icon(
                   Icons.location_on_rounded,
-                  size: 26,
-                  color: ColorsManager.gold,
+                  size: 26.sp,
+                  color: themeController.isLight
+                      ? ColorsManager.green
+                      : ColorsManager.white,
                 ),
-                SizedBox(width: 4),
+                SizedBox(width: 4.sp),
                 Text(
                   location,
-                  style: const TextStyle(
-                    color: ColorsManager.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                  style: TextStyle(
+                    color: themeController.isLight
+                        ? ColorsManager.green
+                        : ColorsManager.white,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 20.sp,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12.sp),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -111,16 +133,20 @@ class ProductDetailsPage extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.attach_money,
-                      size: 26,
-                      color: ColorsManager.gold,
+                      size: 26.sp,
+                      color: themeController.isLight
+                          ? ColorsManager.green
+                          : ColorsManager.white,
                     ),
-                    SizedBox(width: 4),
+                    SizedBox(width: 4.sp),
                     Text(
                       price,
-                      style: const TextStyle(
-                        color: ColorsManager.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                      style: TextStyle(
+                        color: themeController.isLight
+                            ? ColorsManager.green
+                            : ColorsManager.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20.sp,
                       ),
                     ),
                   ],
@@ -129,50 +155,64 @@ class ProductDetailsPage extends StatelessWidget {
                   children: [
                     Text(
                       "In Stock :",
-                      style: const TextStyle(
-                        color: ColorsManager.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                      style: TextStyle(
+                        color: themeController.isLight
+                            ? ColorsManager.green
+                            : ColorsManager.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20.sp,
                       ),
                     ),
-                    SizedBox(width: 4),
+                    SizedBox(width: 4.sp),
                     Text(
                       stock,
-                      style: const TextStyle(
-                        color: Colors.green,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                      style: TextStyle(
+                        color: themeController.isLight
+                            ? ColorsManager.green
+                            : ColorsManager.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20.sp,
                       ),
                     ),
                   ],
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.sp),
             // Description
-            const Text(
+            Text(
               "Description",
               style: TextStyle(
-                color: ColorsManager.white,
+                color: themeController.isLight
+                    ? ColorsManager.green
+                    : ColorsManager.white,
                 fontWeight: FontWeight.bold,
-                fontSize: 18,
+                fontSize: 20.sp,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Container(
-              height: 96,
-              width: 350,
-              padding: const EdgeInsets.all(12),
+              height: 96.sp,
+              width: double.infinity,
+              padding: EdgeInsets.all(12.sp),
               decoration: BoxDecoration(
-                border: Border.all(color: ColorsManager.white),
+                border: Border.all(
+                  color: themeController.isLight
+                      ? ColorsManager.green
+                      : ColorsManager.white,
+                ),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
                 description,
-                style: const TextStyle(color: Colors.white70),
+                style: TextStyle(
+                  color: themeController.isLight
+                      ? ColorsManager.green
+                      : ColorsManager.white,
+                ),
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24.sp),
 
             // Delivery & Credit
             Row(
@@ -180,9 +220,15 @@ class ProductDetailsPage extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Text(
+                    Text(
                       "Delivery ",
-                      style: TextStyle(color: ColorsManager.white),
+                      style: TextStyle(
+                        color: themeController.isLight
+                            ? ColorsManager.green
+                            : ColorsManager.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20.sp,
+                      ),
                     ),
                     Icon(
                       delivery ? Icons.check_circle : Icons.cancel,
@@ -192,9 +238,15 @@ class ProductDetailsPage extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    const Text(
+                    Text(
                       "Sell on Credit ",
-                      style: TextStyle(color: ColorsManager.white),
+                      style: TextStyle(
+                        color: themeController.isLight
+                            ? ColorsManager.green
+                            : ColorsManager.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20.sp,
+                      ),
                     ),
                     Icon(
                       sellOnCredit ? Icons.check_circle : Icons.cancel,
@@ -204,33 +256,57 @@ class ProductDetailsPage extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 90.sp),
 
             // Buttons
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: ColorsManager.grey,
-                foregroundColor: ColorsManager.green,
-                minimumSize: const Size(double.infinity, 48),
+                backgroundColor: themeController.isLight
+                    ? ColorsManager.gold
+                    : ColorsManager.grey,
+                foregroundColor: themeController.isLight
+                    ? ColorsManager.green
+                    : ColorsManager.green,
+                minimumSize: Size(double.infinity, 48.sp),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              onPressed: () {},
-              child: const Text("Add to Cart"),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (_) => const QuantityDialog(),
+                );
+              },
+              child: Text(
+                "Add to Cart",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.sp),
+              ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12.sp),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: ColorsManager.gold,
-                foregroundColor: ColorsManager.green,
-                minimumSize: const Size(double.infinity, 48),
+                backgroundColor: themeController.isLight
+                    ? ColorsManager.green
+                    : ColorsManager.gold,
+                foregroundColor: themeController.isLight
+                    ? ColorsManager.white
+                    : ColorsManager.green,
+                minimumSize: Size(double.infinity, 48.sp),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              onPressed: () {},
-              child: const Text("Buy Now"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => YourCartPage()),
+                );
+              },
+              child: Text(
+                "Buy Now",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.sp),
+              ),
             ),
           ],
         ),
