@@ -51,6 +51,8 @@ class ContractorFinancePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: ColorsManager.green,
         surfaceTintColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        // leading: BackButton(color: themeController.isLight? ColorsManager.gold: ColorsManager.gold,),
 
         title: Text(
           "Dashboard",

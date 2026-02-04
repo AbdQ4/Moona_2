@@ -9,13 +9,14 @@ import 'package:moona/widgets/custom_navBar.dart';
 class ContractorMainLayout extends StatefulWidget {
   const ContractorMainLayout({super.key});
   static const String routeName = "/contractor_main_layout";
+    static int  selectedIndex = 0;
+
 
   @override
   State<ContractorMainLayout> createState() => _ContractorMainLayoutState();
 }
 
 class _ContractorMainLayoutState extends State<ContractorMainLayout> {
-  int _selectedIndex = 0;
   final List<Widget> _screens = [
     ContructorHomePage(),
     ContractorFinancePage(),
@@ -25,7 +26,7 @@ class _ContractorMainLayoutState extends State<ContractorMainLayout> {
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+     ContractorMainLayout.selectedIndex = index;
     });
   }
 
@@ -33,9 +34,9 @@ class _ContractorMainLayoutState extends State<ContractorMainLayout> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorsManager.green,
-      body: _screens[_selectedIndex],
+      body: _screens[ContractorMainLayout.selectedIndex],
       bottomNavigationBar: CustomNavbar(
-        currentIndex: _selectedIndex,
+        currentIndex: ContractorMainLayout.selectedIndex,
         onTab: _onItemTapped,
       ),
     );

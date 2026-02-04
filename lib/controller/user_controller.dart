@@ -409,8 +409,8 @@ class UserController extends ChangeNotifier {
         SnackBar(
           content: Text("Name updated successfully!"),
           backgroundColor: themeController.isLight
-              ? ColorsManager.green
-              : ColorsManager.white,
+              ? ColorsManager.white
+              : ColorsManager.green,
         ),
       );
       await fetchUserDetails();
@@ -440,8 +440,8 @@ class UserController extends ChangeNotifier {
         SnackBar(
           content: Text("Phone number updated successfully!"),
           backgroundColor: themeController.isLight
-              ? ColorsManager.green
-              : ColorsManager.white,
+              ? ColorsManager.white
+              : ColorsManager.green,
         ),
       );
       await fetchUserDetails();
