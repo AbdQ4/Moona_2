@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "TEAMID.com.moona.app",
+        "paths": ["/reset_password*"]
+      }
+    ]
+  }
+}

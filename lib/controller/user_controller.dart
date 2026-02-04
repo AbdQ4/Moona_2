@@ -528,7 +528,7 @@ class UserController extends ChangeNotifier {
 
   /// ===========================
   /// Get Password Token
-  /// =========================
+  /// ===========================
 
   Future<void> requestResetToken({
     required String email,
@@ -536,9 +536,30 @@ class UserController extends ChangeNotifier {
     required BuildContext context,
   }) async {
     try {
-      await supabase.auth.resetPasswordForEmail(email);
+      await supabase.auth.signInWithOtp(email: email.trim());
     } catch (e) {
       debugPrint("Error requesting reset token: $e");
+    }
+  }
+
+  /// ===========================
+  /// Verify OTP for Password Reset
+  /// ===========================
+
+  Future<AuthResponse?> verifyResetOtp({
+    required String email,
+    required String otpCode,
+  }) async {
+    try {
+      final response = await supabase.auth.verifyOTP(
+        type: OtpType.recovery,
+        token: otpCode,
+        email: email,
+      );
+      return response;
+    } catch (e) {
+      debugPrint("Error verifying reset OTP: $e");
+      return null;
     }
   }
 }
