@@ -72,6 +72,7 @@ class ForgetPasswordScreen extends StatelessWidget {
                   try {
                     await Supabase.instance.client.auth.resetPasswordForEmail(
                       _emailController.text.toLowerCase().trim(),
+                      redirectTo: 'https://moona-2.vercel.app/update-password',
                     );
                   } catch (e) {
                     debugPrint("Error sending link: $e");
