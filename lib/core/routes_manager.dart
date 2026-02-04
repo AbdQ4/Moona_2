@@ -6,6 +6,7 @@ import 'package:moona/view/auth/pending_screen.dart';
 import 'package:moona/view/auth/renew_license_screen.dart';
 import 'package:moona/view/auth/signup_screen.dart';
 import 'package:moona/view/auth/login_screen.dart';
+import 'package:moona/view/contractor/contractor_finance_page.dart';
 import 'package:moona/view/contractor/contractor_main_layout.dart';
 import 'package:moona/view/supplier/finance_page.dart';
 import 'package:moona/view/supplier/licence_page.dart';
@@ -29,5 +30,6 @@ class RoutesManager {
     RenewLicenseScreen.routeName: (context) => RenewLicenseScreen(),
     FinancePage.routeName: (context) => FinancePage(),
     LicencePage.routeName: (context) => LicencePage(),
+    ContractorFinancePage.routeName: (context) => ContractorFinancePage(),
   };
 }

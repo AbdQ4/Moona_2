@@ -3,10 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
-import 'package:moona/widgets/custom_navBar.dart';
 
 class ContractorFinancePage extends StatelessWidget {
   const ContractorFinancePage({super.key});
+
+  static String routeName = "/contractor_finance_page";
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class ContractorFinancePage extends StatelessWidget {
         "qty": "x 40 tons",
         "from": "El Mansoura",
         "project": "Mohsen Karika",
-        "price": "40,000 \$",
+        "price": "\$ 40,000",
         "paid": true,
       },
       {
@@ -28,7 +29,7 @@ class ContractorFinancePage extends StatelessWidget {
         "qty": "x 1200 tons",
         "from": "El Mansoura",
         "project": "Mohsen Karika",
-        "price": "40,000 \$",
+        "price": "\$ 40,000",
         "paid": false,
       },
       {
@@ -37,7 +38,7 @@ class ContractorFinancePage extends StatelessWidget {
         "qty": "x 40 tons",
         "from": "El Mansoura",
         "project": "Mohsen Karika",
-        "price": "40,000 \$",
+        "price": "\$ 40,000",
         "paid": true,
       },
     ];
@@ -80,7 +81,7 @@ class ContractorFinancePage extends StatelessWidget {
                 _statBox(
                   themeController,
                   icon: Icons.shopping_bag,
-                  title: "Total Orders",
+                  title: " Total Orders",
                   value: "42",
                 ),
               ],
@@ -163,7 +164,9 @@ class ContractorFinancePage extends StatelessWidget {
                                   Text(
                                     order["title"],
                                     style: TextStyle(
-                                      color: ColorsManager.gold,
+                                      color: themeController.isLight
+                                      ? ColorsManager.green
+                                      : ColorsManager.gold,
                                       fontSize: 16.sp,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -224,17 +227,31 @@ class ContractorFinancePage extends StatelessWidget {
                         ),
 
                         SizedBox(height: 10.sp),
+                       
 
-                        Text(
-                          order["price"],
-                          style: TextStyle(
-                            color: ColorsManager.gold,
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        Row(
+                          children: [
+                            Spacer(),
+                            Text(
+                              order["price"],
+                              style: TextStyle(
+                                color: themeController.isLight
+                                    ? ColorsManager.green
+                                    : ColorsManager.gold,
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
 
-                        SizedBox(height: 10.sp),
+                        SizedBox(height: 8.sp),
+
+                         Divider(color: themeController.isLight
+                                ? ColorsManager.green
+                                : ColorsManager.gold,),
+
+                                SizedBox(height: 8.sp),
 
                         /// ---------- Actions ----------
                         Row(
@@ -242,13 +259,17 @@ class ContractorFinancePage extends StatelessWidget {
                             Icon(
                               Icons.receipt_long,
                               size: 18.sp,
-                              color: ColorsManager.gold,
+                              color: themeController.isLight
+                                ? ColorsManager.green
+                                : ColorsManager.gold,
                             ),
                             SizedBox(width: 6.sp),
                             Text(
                               "Show Invoice",
                               style: TextStyle(
-                                color: ColorsManager.gold,
+                                color: themeController.isLight
+                                ? ColorsManager.green
+                                : ColorsManager.white,
                                 fontSize: 12.sp,
                               ),
                             ),
@@ -256,13 +277,17 @@ class ContractorFinancePage extends StatelessWidget {
                             Icon(
                               Icons.download,
                               size: 18.sp,
-                              color: ColorsManager.gold,
+                              color: themeController.isLight
+                                ? ColorsManager.green
+                                : ColorsManager.gold,
                             ),
                             SizedBox(width: 6.sp),
                             Text(
                               "Download PDF",
                               style: TextStyle(
-                                color: ColorsManager.gold,
+                                color: themeController.isLight
+                                ? ColorsManager.green
+                                : ColorsManager.white,
                                 fontSize: 12.sp,
                               ),
                             ),
@@ -277,8 +302,6 @@ class ContractorFinancePage extends StatelessWidget {
           ],
         ),
       ),
-
-     
     );
   }
 
@@ -292,10 +315,12 @@ class ContractorFinancePage extends StatelessWidget {
   }) {
     return Expanded(
       child: Container(
-        padding: EdgeInsets.all(14.sp),
+        height: 100.sp,
+        width: 150.sp,
+        
         decoration: BoxDecoration(
           color: themeController.isLight
-              ? ColorsManager.white
+              ? ColorsManager.green
               : ColorsManager.green,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
@@ -305,37 +330,45 @@ class ContractorFinancePage extends StatelessWidget {
             width: 2,
           ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(
-              icon,
-              color: themeController.isLight
-                  ? ColorsManager.green
-                  : ColorsManager.gold,
-            ),
-            SizedBox(height: 8.sp),
-            Text(
-              title,
-              style: TextStyle(
-                color: themeController.isLight
-                    ? ColorsManager.green
-                    : ColorsManager.white,
-                fontSize: 14.sp,
+        child: Padding(
+          padding:  EdgeInsets.all(14.sp),
+          child: Column(
+            // crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    icon,
+                    color: themeController.isLight
+                        ? ColorsManager.gold
+                        : ColorsManager.gold,
+                  ),
+                  // SizedBox(height: 8.sp),
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: themeController.isLight
+                          ? ColorsManager.gold
+                          : ColorsManager.white,
+                      fontSize: 14.sp,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            SizedBox(height: 6.sp),
-            Text(
-              value,
-              style: TextStyle(
-                color: themeController.isLight
-                    ? ColorsManager.green
-                    : ColorsManager.white,
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold,
+              // SizedBox(height: 8.sp),
+              Text(
+                value,
+                style: TextStyle(
+                  color: themeController.isLight
+                      ? ColorsManager.white
+                      : ColorsManager.white,
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -349,6 +382,7 @@ class ContractorFinancePage extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.sp, vertical: 6.sp),
       decoration: BoxDecoration(
+        color: ColorsManager.green,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: themeController.isLight
@@ -362,7 +396,7 @@ class ContractorFinancePage extends StatelessWidget {
             title,
             style: TextStyle(
               color: themeController.isLight
-                  ? ColorsManager.green
+                  ? ColorsManager.white
                   : ColorsManager.gold,
               fontSize: 12.sp,
             ),
