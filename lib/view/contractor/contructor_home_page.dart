@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
 import 'package:moona/view/contractor/contractor_category_page.dart';
+import 'package:moona/view/contractor/your_cart_page.dart';
 import 'package:provider/provider.dart';
 
 class ContructorHomePage extends StatefulWidget {
@@ -77,12 +78,17 @@ class _ContructorHomePageState extends State<ContructorHomePage> {
         actions: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.sp, horizontal: 12.sp),
-            child: Icon(
-              Icons.shopping_cart,
-              color: themeController.isLight
-                  ? ColorsManager.white
-                  : ColorsManager.gold,
-              size: 42.sp,
+            child: IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, YourCartPage.routeName);
+              },
+              icon: Icon(
+                Icons.shopping_cart,
+                color: themeController.isLight
+                    ? ColorsManager.white
+                    : ColorsManager.gold,
+                size: 42.sp,
+              ),
             ),
           ),
         ],
@@ -99,17 +105,14 @@ class _ContructorHomePageState extends State<ContructorHomePage> {
           itemCount: categoryItems.length,
           itemBuilder: (context, index) {
             final category = categories[index];
-        
+
             final title = category["title"]!;
             return GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => ContractorCategoryPage(
-                      categoryName: title,
-                      items: categoryItems[title] ?? [],
-                    ),
+                    builder: (_) => ContractorCategoryPage(categoryName: title),
                   ),
                 );
               },

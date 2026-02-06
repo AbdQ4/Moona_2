@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:moona/controller/addItem_controller.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
-import 'package:moona/widgets/product_card.dart';
+import 'package:moona/widgets/product_card_supplier.dart';
 import 'package:provider/provider.dart';
 
 class CategoryPage extends StatelessWidget {
@@ -97,7 +97,7 @@ class CategoryPage extends StatelessWidget {
                     .toString()
                     .toLowerCase();
                 final product = categoryProducts[index];
-                return ProductCard(
+                return ProductCardSupplier(
                   imageAddress: productName == 'cement'
                       ? 'assets/images/cement.jpg'
                       : productName == 'steel'

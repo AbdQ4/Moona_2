@@ -3,7 +3,6 @@ import 'package:moona/controller/cart_provider.dart';
 import 'package:moona/controller/products_provider.dart';
 import 'package:provider/provider.dart';
 
-
 class ProductDetailsProvider extends ChangeNotifier {
   final String image;
   final String company;
@@ -42,10 +41,22 @@ class ProductDetailsProvider extends ChangeNotifier {
   }
 
   /// 🔥 هنا الربط الحقيقي
-  void addToCart(BuildContext context) {
-    final cart = Provider.of<CartProvider>(context, listen: false);
+  // void addToCart(BuildContext context) {
+  //   final cart = Provider.of<CartProvider>(context, listen: false);
 
-    cart.addToCart(ProductModel(id: "2121", image: image, company: company, location: location, price: price, stock: stock, description: description, delivery: delivery, sellOnCredit: sellOnCredit), quantity);
-
-  }
+  //   cart.addToCart(
+  //     ProductModel(
+  //       id: "2121",
+  //       image: image,
+  //       company: company,
+  //       location: location,
+  //       price: price,
+  //       stock: stock,
+  //       description: description,
+  //       delivery: delivery,
+  //       sellOnCredit: sellOnCredit,
+  //     ),
+  //     quantity,
+  //   );
+  // }
 }

@@ -6,8 +6,11 @@ import 'package:moona/view/auth/pending_screen.dart';
 import 'package:moona/view/auth/renew_license_screen.dart';
 import 'package:moona/view/auth/signup_screen.dart';
 import 'package:moona/view/auth/login_screen.dart';
+import 'package:moona/view/contractor/card_detailes_page.dart';
 import 'package:moona/view/contractor/contractor_finance_page.dart';
 import 'package:moona/view/contractor/contractor_main_layout.dart';
+import 'package:moona/view/contractor/product_details.dart';
+import 'package:moona/view/contractor/your_cart_page.dart';
 import 'package:moona/view/supplier/finance_page.dart';
 import 'package:moona/view/supplier/licence_page.dart';
 import 'package:moona/view/supplier/products_details_supplier.dart';
@@ -31,5 +34,8 @@ class RoutesManager {
     FinancePage.routeName: (context) => FinancePage(),
     LicencePage.routeName: (context) => LicencePage(),
     ContractorFinancePage.routeName: (context) => ContractorFinancePage(),
+    ProductsDetailsContractor.routeName: (context) =>
+        ProductsDetailsContractor(),
+    YourCartPage.routeName: (context) => YourCartPage(),
   };
 }

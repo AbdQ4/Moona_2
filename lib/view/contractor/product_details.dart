@@ -1,37 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:moona/controller/addItem_controller.dart';
+import 'package:moona/controller/cart_provider.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
-import 'package:moona/view/contractor/your_cart_page.dart';
-import 'package:moona/widgets/quantityDialog.dart';
-
 import 'package:provider/provider.dart';
 
-class ProductDetailsPage extends StatelessWidget {
-  final String image;
-  final String company;
-  final String location;
-  final String price;
-  final String stock;
-  final String description;
-  final bool delivery;
-  final bool sellOnCredit;
+class ProductsDetailsContractor extends StatefulWidget {
+  const ProductsDetailsContractor({super.key});
 
-  const ProductDetailsPage({
-    super.key,
-    required this.image,
-    required this.company,
-    required this.location,
-    required this.price,
-    required this.stock,
-    required this.description,
-    this.delivery = true,
-    this.sellOnCredit = false,
-  });
+  static const String routeName = '/products_details_contractor';
+
+  @override
+  State<ProductsDetailsContractor> createState() =>
+      _ProductsDetailsContractorState();
+}
+
+class _ProductsDetailsContractorState extends State<ProductsDetailsContractor> {
+  @override
+  void initState() {
+    final productController = Provider.of<AdditemProvider>(
+      context,
+      listen: false,
+    );
+    productController.getProducts();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final themeController = Provider.of<ThemeController>(context);
+    final Map<String, dynamic> product =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
     return Scaffold(
       backgroundColor: themeController.isLight
@@ -41,17 +42,19 @@ class ProductDetailsPage extends StatelessWidget {
         backgroundColor: ColorsManager.green,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: themeController.isLight
-                ? ColorsManager.white
-                : ColorsManager.gold,
-            size: 42.sp,
+          icon: Padding(
+            padding: REdgeInsets.only(left: 8.0),
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: themeController.isLight
+                  ? ColorsManager.white
+                  : ColorsManager.gold,
+            ),
           ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          "Cement - $company",
+          "${product['name']} - ${product['company']}",
           style: TextStyle(
             color: themeController.isLight
                 ? ColorsManager.white
@@ -61,256 +64,259 @@ class ProductDetailsPage extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        actions: [
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.sp, horizontal: 12.sp),
-            child: Icon(
-              Icons.shopping_cart,
-              color: themeController.isLight
-                  ? ColorsManager.white
-                  : ColorsManager.gold,
-              size: 42.sp,
-            ),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.sp),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Product Image
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                image,
-                height: 200.sp,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            ),
-            SizedBox(height: 16.sp),
-
-            // Product Info
-            Text(
-              "$company Cement",
-              style: TextStyle(
-                color: themeController.isLight
-                    ? ColorsManager.green
-                    : ColorsManager.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 24.sp,
-              ),
-            ),
-            SizedBox(height: 8.sp),
-            Row(
+        padding: REdgeInsets.all(16),
+        child: Consumer<CartProvider>(
+          builder: (context, provider, child) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.location_on_rounded,
-                  size: 26.sp,
-                  color: themeController.isLight
-                      ? ColorsManager.green
-                      : ColorsManager.white,
+                // Product Image
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12.r),
+                  child: Image.asset(
+                    product['name'] == 'cement'
+                        ? 'assets/images/cement.jpg'
+                        : product['name'].toString().toLowerCase() == 'steel'
+                        ? 'assets/images/steel.jpg'
+                        : product['name'].toString().toLowerCase() == 'bricks'
+                        ? 'assets/images/brick.jpg'
+                        : product['name'].toString().toLowerCase() == 'sand'
+                        ? 'assets/images/sand.jpg'
+                        : product['name'].toString().toLowerCase() == 'gravel'
+                        ? 'assets/images/gravel.jpg'
+                        : product['name'].toString().toLowerCase() == 'bulbs'
+                        ? 'assets/images/bulbs.jpg'
+                        : product['name'].toString().toLowerCase() == 'paint'
+                        ? 'assets/images/paints.jpg'
+                        : product['name'].toString().toLowerCase() == 'wires'
+                        ? 'assets/images/wires.jpg'
+                        : 'assets/images/default.jpg',
+                    height: 200.h,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-                SizedBox(width: 4.sp),
+                SizedBox(height: 16.h),
+
+                // Product Info
                 Text(
-                  location,
+                  "${product['company']} - ${product['name']}",
                   style: TextStyle(
                     color: themeController.isLight
                         ? ColorsManager.green
                         : ColorsManager.white,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20.sp,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24.sp,
                   ),
                 ),
-              ],
-            ),
-            SizedBox(height: 12.sp),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+                SizedBox(height: 8.h),
                 Row(
                   children: [
                     Icon(
-                      Icons.attach_money,
-                      size: 26.sp,
+                      Icons.location_on_rounded,
+                      size: 26,
                       color: themeController.isLight
                           ? ColorsManager.green
+                          : ColorsManager.gold,
+                    ),
+                    SizedBox(width: 4.w),
+                    Text(
+                      product['location'] ?? "Unknown Location",
+                      style: TextStyle(
+                        color: themeController.isLight
+                            ? ColorsManager.green
+                            : ColorsManager.gold,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.attach_money,
+                          size: 26.sp,
+                          color: themeController.isLight
+                              ? ColorsManager.green
+                              : ColorsManager.gold,
+                        ),
+                        SizedBox(width: 4),
+                        Text(
+                          product['price_per_ton']?.toString() ??
+                              "Price not available",
+                          style: TextStyle(
+                            color: themeController.isLight
+                                ? ColorsManager.green
+                                : ColorsManager.white,
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "In Stock :",
+                          style: TextStyle(
+                            color: themeController.isLight
+                                ? ColorsManager.green
+                                : ColorsManager.white,
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: 4.w),
+                        Text(
+                          product['stock']?.toString() ?? "0",
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8.h),
+                // Description
+                Text(
+                  "Description",
+                  style: TextStyle(
+                    color: themeController.isLight
+                        ? ColorsManager.green
+                        : ColorsManager.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18.sp,
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Container(
+                  height: 96.h,
+                  width: 350.w,
+                  padding: REdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: themeController.isLight
+                          ? ColorsManager.green
+                          : ColorsManager.gold,
+                    ),
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: Text(
+                    product['description'] ?? "No description available",
+                    style: TextStyle(
+                      color: themeController.isLight
+                          ? ColorsManager.black
                           : ColorsManager.white,
                     ),
-                    SizedBox(width: 4.sp),
-                    Text(
-                      price,
-                      style: TextStyle(
-                        color: themeController.isLight
-                            ? ColorsManager.green
-                            : ColorsManager.white,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 20.sp,
-                      ),
+                  ),
+                ),
+                SizedBox(height: 24.h),
+
+                // Delivery & Credit
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          "Delivery ",
+                          style: TextStyle(
+                            color: themeController.isLight
+                                ? ColorsManager.green
+                                : ColorsManager.white,
+                          ),
+                        ),
+                        Icon(
+                          product['is_delivery'] == true
+                              ? Icons.check_circle
+                              : Icons.cancel,
+                          color: product['is_delivery'] == true
+                              ? Colors.green
+                              : Colors.red,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "Sell on Credit ",
+                          style: TextStyle(
+                            color: themeController.isLight
+                                ? ColorsManager.green
+                                : ColorsManager.white,
+                          ),
+                        ),
+                        Icon(
+                          product['is_credit'] == true
+                              ? Icons.check_circle
+                              : Icons.cancel,
+                          color: product['is_credit'] == true
+                              ? Colors.green
+                              : Colors.red,
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                Row(
-                  children: [
-                    Text(
-                      "In Stock :",
-                      style: TextStyle(
-                        color: themeController.isLight
-                            ? ColorsManager.green
-                            : ColorsManager.white,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 20.sp,
-                      ),
+                SizedBox(height: 24.h),
+
+                // Buttons
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: themeController.isLight
+                        ? ColorsManager.gold
+                        : ColorsManager.gold,
+                    foregroundColor: ColorsManager.green,
+                    minimumSize: Size(double.infinity, 48.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    SizedBox(width: 4.sp),
-                    Text(
-                      stock,
-                      style: TextStyle(
-                        color: themeController.isLight
-                            ? ColorsManager.green
-                            : ColorsManager.white,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 20.sp,
-                      ),
+                  ),
+                  onPressed: () async {
+                    await provider.addToCartTable(
+                      context: context,
+                      productId: product['id'],
+                      stock: product['stock'],
+                      price: product['price_per_ton'].toDouble(),
+                    );
+                  },
+                  child: const Text("Add to Cart"),
+                ),
+                SizedBox(height: 12.h),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: themeController.isLight
+                        ? ColorsManager.green
+                        : ColorsManager.grey,
+                    foregroundColor: ColorsManager.white,
+                    minimumSize: Size(double.infinity, 48.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
-                  ],
+                  ),
+                  onPressed: () async {},
+                  child: const Text("Buy Now"),
                 ),
               ],
-            ),
-            SizedBox(height: 8.sp),
-            // Description
-            Text(
-              "Description",
-              style: TextStyle(
-                color: themeController.isLight
-                    ? ColorsManager.green
-                    : ColorsManager.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 20.sp,
-              ),
-            ),
-            SizedBox(height: 8),
-            Container(
-              height: 96.sp,
-              width: double.infinity,
-              padding: EdgeInsets.all(12.sp),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: themeController.isLight
-                      ? ColorsManager.green
-                      : ColorsManager.white,
-                ),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                description,
-                style: TextStyle(
-                  color: themeController.isLight
-                      ? ColorsManager.green
-                      : ColorsManager.white,
-                ),
-              ),
-            ),
-            SizedBox(height: 24.sp),
-
-            // Delivery & Credit
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      "Delivery ",
-                      style: TextStyle(
-                        color: themeController.isLight
-                            ? ColorsManager.green
-                            : ColorsManager.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20.sp,
-                      ),
-                    ),
-                    Icon(
-                      delivery ? Icons.check_circle : Icons.cancel,
-                      color: delivery ? Colors.green : Colors.red,
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text(
-                      "Sell on Credit ",
-                      style: TextStyle(
-                        color: themeController.isLight
-                            ? ColorsManager.green
-                            : ColorsManager.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20.sp,
-                      ),
-                    ),
-                    Icon(
-                      sellOnCredit ? Icons.check_circle : Icons.cancel,
-                      color: sellOnCredit ? Colors.green : Colors.red,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(height: 90.sp),
-
-            // Buttons
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: themeController.isLight
-                    ? ColorsManager.gold
-                    : ColorsManager.grey,
-                foregroundColor: themeController.isLight
-                    ? ColorsManager.green
-                    : ColorsManager.green,
-                minimumSize: Size(double.infinity, 48.sp),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (_) => const QuantityDialog(),
-                );
-              },
-              child: Text(
-                "Add to Cart",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.sp),
-              ),
-            ),
-            SizedBox(height: 12.sp),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: themeController.isLight
-                    ? ColorsManager.green
-                    : ColorsManager.gold,
-                foregroundColor: themeController.isLight
-                    ? ColorsManager.white
-                    : ColorsManager.green,
-                minimumSize: Size(double.infinity, 48.sp),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => YourCartPage()),
-                );
-              },
-              child: Text(
-                "Buy Now",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.sp),
-              ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
+  }
+
+  void setStateSB(VoidCallback fn) {
+    if (!mounted) return;
+    setState(fn);
   }
 }

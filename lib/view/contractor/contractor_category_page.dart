@@ -1,115 +1,140 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:moona/controller/addItem_controller.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
-import 'package:moona/view/contractor/products.dart';
+import 'package:moona/widgets/product_card_contractor.dart';
+import 'package:moona/widgets/product_card_supplier.dart';
 import 'package:provider/provider.dart';
 
 class ContractorCategoryPage extends StatelessWidget {
   final String categoryName;
-  final List<Map<String, String>> items;
-
-  const ContractorCategoryPage({
-    super.key,
-    required this.categoryName,
-    required this.items,
-  });
+  const ContractorCategoryPage({super.key, required this.categoryName});
 
   @override
   Widget build(BuildContext context) {
     final themeController = Provider.of<ThemeController>(context);
 
+    final addItemProvider = Provider.of<AdditemProvider>(
+      context,
+      listen: false,
+    );
+
     return Scaffold(
-      backgroundColor: themeController.isLight
-          ? ColorsManager.white
-          : ColorsManager.green,
       appBar: AppBar(
-        iconTheme: IconThemeData(
+        backgroundColor: ColorsManager.green,
+        leading: BackButton(
           color: themeController.isLight
               ? ColorsManager.white
               : ColorsManager.gold,
         ),
         title: Text(
           categoryName,
-          style: TextStyle(
+          style: GoogleFonts.inter(
             color: themeController.isLight
                 ? ColorsManager.white
                 : ColorsManager.gold,
           ),
         ),
-        backgroundColor: themeController.isLight
-            ? ColorsManager.green
-            : ColorsManager.green,
+        centerTitle: true,
       ),
-      body: items.isEmpty
-          ? Center(
-              child: Text(
-                "No items in $categoryName",
-                style: TextStyle(color: ColorsManager.grey, fontSize: 18.sp),
-              ),
-            )
-          : Padding(
-              padding: EdgeInsets.symmetric(vertical: 42.sp, horizontal: 8.sp),
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 25.sp,
-                  crossAxisSpacing: 20.sp,
+      backgroundColor: themeController.isLight
+          ? ColorsManager.white
+          : ColorsManager.green,
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
+        child: FutureBuilder(
+          future: addItemProvider.getProducts(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasError) {
+              return Center(child: Text("Error: ${snapshot.error}"));
+            }
+            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(
+                child: Text(
+                  "No items yet in $categoryName",
+                  style: TextStyle(
+                    color: themeController.isLight
+                        ? ColorsManager.black
+                        : ColorsManager.gold,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  final item = items[index];
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => Products()),
-                      );
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: themeController.isLight
-                              ? ColorsManager.green
-                              : ColorsManager.gold,
-                          width: 2.sp,
-                        ),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: Stack(
-                          alignment: Alignment.bottomCenter,
-                          children: [
-                            Image.asset(
-                              item["image"]!,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: double.infinity,
-                            ),
-                            Container(
-                              width: double.infinity,
-                              height: 50.sp,
-                              color: ColorsManager.black.withOpacity(0.7),
-                              child: Center(
-                                child: Text(
-                                  item["name"]!,
-                                  style: TextStyle(
-                                    color: ColorsManager.gold,
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
+              );
+            }
+
+            final categoryProducts = snapshot.data!
+                .where(
+                  (p) =>
+                      p['type'].toString().toLowerCase() ==
+                      categoryName.toLowerCase(),
+                )
+                .toList();
+
+            if (categoryProducts.isEmpty) {
+              return Center(
+                child: Text(
+                  "No items yet in $categoryName",
+                  style: TextStyle(
+                    color: themeController.isLight
+                        ? ColorsManager.black
+                        : ColorsManager.gold,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              );
+            }
+
+            return GridView.builder(
+              itemCount: categoryProducts.length,
+              itemBuilder: (context, index) {
+                final productName = categoryProducts[index]['name']
+                    .toString()
+                    .toLowerCase();
+                final product = categoryProducts[index];
+                return ProductCardContractor(
+                  imageAddress: productName == 'cement'
+                      ? 'assets/images/cement.jpg'
+                      : productName == 'steel'
+                      ? 'assets/images/steel.jpg'
+                      : productName == 'bricks'
+                      ? 'assets/images/brick.jpg'
+                      : productName == 'sand'
+                      ? 'assets/images/sand.jpg'
+                      : productName == 'gravel'
+                      ? 'assets/images/gravel.jpg'
+                      : productName == 'bulbs'
+                      ? 'assets/images/bulbs.jpg'
+                      : productName == 'paint'
+                      ? 'assets/images/paints.jpg'
+                      : productName == 'wires'
+                      ? 'assets/images/wires.jpg'
+                      : 'assets/images/default.jpg',
+                  companyName: product['company'] ?? 'Unknown Company',
+                  location: product['location'] ?? 'Unknown Location',
+                  price: product['price_per_ton'] != null
+                      ? '\$${product['price_per_ton']} per ton'
+                      : 'Price not available',
+                  itemsCount: product['stock'] ?? 0,
+                  currentProduct: product,
+                );
+              },
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                childAspectRatio: 0.65,
               ),
-            ),
+            );
+          },
+        ),
+      ),
     );
   }
 }

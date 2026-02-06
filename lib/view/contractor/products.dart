@@ -245,17 +245,8 @@ class Products extends StatelessWidget {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (_) => ProductDetailsPage(
-                                            image: item["image"],
-                                            company: item["company"],
-                                            location: item["location"],
-                                            price: item["price"],
-                                            stock: "400 ton",
-                                            description:
-                                                "klam klam klam klam kteeeer",
-                                            delivery: true,
-                                            sellOnCredit: false,
-                                          ),
+                                          builder: (_) =>
+                                              ProductsDetailsContractor(),
                                         ),
                                       );
                                     },

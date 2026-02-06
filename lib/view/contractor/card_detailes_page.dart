@@ -13,6 +13,7 @@ import 'package:moona/widgets/custom_elevated_button.dart';
 class CardDetailesPage extends StatelessWidget {
   const CardDetailesPage({super.key});
 
+  static const String routeName = '/card_details';
 
   @override
   Widget build(BuildContext context) {
