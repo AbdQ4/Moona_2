@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
-import 'package:moona/view/contractor/card_detailes_page.dart';
 import 'package:moona/view/contractor/product_details.dart';
-import 'package:moona/view/supplier/products_details_supplier.dart';
 import 'package:provider/provider.dart';
 
 class ProductCardContractor extends StatelessWidget {

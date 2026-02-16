@@ -4,12 +4,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:moona/controller/addItem_controller.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
-import 'package:moona/widgets/product_card_supplier.dart';
+import 'package:moona/widgets/product_card.dart';
 import 'package:provider/provider.dart';
 
 class CategoryPage extends StatelessWidget {
   final String categoryName;
   const CategoryPage({super.key, required this.categoryName});
+  static const String routeName = "/category_page";
 
   @override
   Widget build(BuildContext context) {
@@ -43,31 +44,9 @@ class CategoryPage extends StatelessWidget {
           : ColorsManager.green,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
-        child: FutureBuilder(
-          future: addItemProvider.getProducts(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (snapshot.hasError) {
-              return Center(child: Text("Error: ${snapshot.error}"));
-            }
-            if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Center(
-                child: Text(
-                  "No items yet in $categoryName",
-                  style: TextStyle(
-                    color: themeController.isLight
-                        ? ColorsManager.black
-                        : ColorsManager.gold,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              );
-            }
-
-            final categoryProducts = snapshot.data!
+        child: Consumer<AdditemProvider>(
+          builder: (context, provider, child) {
+            final categoryProducts = provider.products
                 .where(
                   (p) =>
                       p['type'].toString().toLowerCase() ==
@@ -92,12 +71,17 @@ class CategoryPage extends StatelessWidget {
 
             return GridView.builder(
               itemCount: categoryProducts.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                childAspectRatio: 0.65,
+              ),
               itemBuilder: (context, index) {
-                final productName = categoryProducts[index]['name']
-                    .toString()
-                    .toLowerCase();
                 final product = categoryProducts[index];
-                return ProductCardSupplier(
+                final productName = product['name'].toString().toLowerCase();
+
+                return ProductCard(
                   imageAddress: productName == 'cement'
                       ? 'assets/images/cement.jpg'
                       : productName == 'steel'
@@ -115,21 +99,14 @@ class CategoryPage extends StatelessWidget {
                       : productName == 'wires'
                       ? 'assets/images/wires.jpg'
                       : 'assets/images/default.jpg',
+
                   companyName: product['company'] ?? 'Unknown Company',
                   location: product['location'] ?? 'Unknown Location',
-                  price: product['price_per_ton'] != null
-                      ? '\$${product['price_per_ton']} per ton'
-                      : 'Price not available',
+                  price: '\$${product['price_per_ton']} per ton',
                   itemsCount: product['stock'] ?? 0,
                   currentProduct: product,
                 );
               },
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                childAspectRatio: 0.65,
-              ),
             );
           },
         ),

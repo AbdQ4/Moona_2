@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moona/model/cart_item_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'products_provider.dart';
 
 class CartProvider extends ChangeNotifier {
   final _client = Supabase.instance.client;

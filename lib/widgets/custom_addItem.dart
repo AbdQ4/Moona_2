@@ -86,6 +86,7 @@ class _CustomAdditemState extends State<CustomAdditem> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Type Dropdown
                   DropdownButtonFormField<String>(
                     decoration: InputDecoration(
                       filled: true,
@@ -128,7 +129,7 @@ class _CustomAdditemState extends State<CustomAdditem> {
                     ),
                     items: categories.keys
                         .map(
-                          (e) => DropdownMenuItem(
+                          (e) => DropdownMenuItem<String>(
                             value: e,
                             child: Text(
                               e,
@@ -144,13 +145,14 @@ class _CustomAdditemState extends State<CustomAdditem> {
                     onChanged: (value) {
                       setState(() {
                         selectedType = value;
-                        selectedSubType = null;
+                        selectedSubType = null; // reset sub type
                       });
                     },
                   ),
 
                   SizedBox(height: 16.h),
 
+                  // Sub Type Dropdown
                   if (selectedType != null)
                     DropdownButtonFormField<String>(
                       decoration: InputDecoration(
@@ -183,10 +185,7 @@ class _CustomAdditemState extends State<CustomAdditem> {
                       iconEnabledColor: themeController.isLight
                           ? ColorsManager.green
                           : ColorsManager.white,
-                      value: categories[selectedType]!.contains(selectedSubType)
-                          ? selectedSubType
-                          : categories[selectedType]!.first,
-
+                      value: selectedSubType, // ✅ no automatic first item
                       hint: Text(
                         "Select item",
                         style: TextStyle(
@@ -197,7 +196,7 @@ class _CustomAdditemState extends State<CustomAdditem> {
                       ),
                       items: categories[selectedType]!
                           .map(
-                            (e) => DropdownMenuItem(
+                            (e) => DropdownMenuItem<String>(
                               value: e,
                               child: Text(
                                 e,
@@ -485,8 +484,7 @@ class _CustomAdditemState extends State<CustomAdditem> {
                       name: selectedSubType!,
                     );
                     if (newProduct != null) {
-                      provider.products.add(newProduct);
-                      setState(() {});
+                      // Nothing .. trust me
                     }
                     Navigator.pop(context);
                   },

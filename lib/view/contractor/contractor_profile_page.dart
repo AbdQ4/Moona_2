@@ -6,8 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/controller/user_controller.dart';
 import 'package:moona/core/colors_manager.dart';
-import 'package:moona/view/contractor/contractor_finance_page.dart';
-import 'package:moona/view/contractor/contractor_licence_page.dart';
 import 'package:moona/view/contractor/contractor_main_layout.dart';
 import 'package:moona/widgets/custom_drop_down_menu.dart';
 import 'package:moona/widgets/custom_elevated_button.dart';
@@ -360,8 +358,7 @@ class _ContractorProfilePageState extends State<ContractorProfilePage> {
               onTap: () {
                 // Navigator.pushNamed(context, ContractorFinancePage.routeName);
                 Navigator.pushNamed(context, ContractorMainLayout.routeName);
-                                ContractorMainLayout.selectedIndex = 1;
-
+                ContractorMainLayout.selectedIndex = 1;
               },
             ),
             Divider(),

@@ -6,7 +6,6 @@ import 'package:moona/view/auth/pending_screen.dart';
 import 'package:moona/view/auth/renew_license_screen.dart';
 import 'package:moona/view/auth/signup_screen.dart';
 import 'package:moona/view/auth/login_screen.dart';
-import 'package:moona/view/contractor/card_detailes_page.dart';
 import 'package:moona/view/contractor/contractor_finance_page.dart';
 import 'package:moona/view/contractor/contractor_main_layout.dart';
 import 'package:moona/view/contractor/product_details.dart';

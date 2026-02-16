@@ -183,9 +183,7 @@ class AdditemProvider with ChangeNotifier {
       debugPrint(">>> deleteResult -> $deleteResult");
 
       // Some Supabase setups return [] on delete success or return deleted rows.
-      final deletedCount = (deleteResult is List)
-          ? deleteResult.length
-          : (1);
+      final deletedCount = (deleteResult is List) ? deleteResult.length : (1);
       if (deletedCount > 0) {
         _products.removeWhere(
           (p) => p['id'].toString() == productId.toString(),

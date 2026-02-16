@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:moona/controller/cart_provider.dart';
-import 'package:moona/controller/products_provider.dart';
-import 'package:provider/provider.dart';
 
 class ProductDetailsProvider extends ChangeNotifier {
   final String image;
