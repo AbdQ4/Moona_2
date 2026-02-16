@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:moona/controller/lang_controller.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/controller/user_controller.dart';
 import 'package:moona/core/colors_manager.dart';
@@ -39,6 +40,7 @@ class _ContractorProfilePageState extends State<ContractorProfilePage> {
   Widget build(BuildContext context) {
     final themeController = Provider.of<ThemeController>(context);
     final userController = Provider.of<UserController>(context);
+    final langController = Provider.of<LangController>(context);
     final user = userController.user;
     return Scaffold(
       key: _scaffoldKey,
@@ -360,8 +362,7 @@ class _ContractorProfilePageState extends State<ContractorProfilePage> {
               onTap: () {
                 // Navigator.pushNamed(context, ContractorFinancePage.routeName);
                 Navigator.pushNamed(context, ContractorMainLayout.routeName);
-                                ContractorMainLayout.selectedIndex = 1;
-
+                ContractorMainLayout.selectedIndex = 1;
               },
             ),
             Divider(),
@@ -712,7 +713,9 @@ class _ContractorProfilePageState extends State<ContractorProfilePage> {
                     label1: "English",
                     value2: "ar",
                     label2: "العربية",
-                    onSelected: (value) {},
+                    onSelected: (value) {
+                      langController.changeLanguage(value);
+                    },
                     initialValue: "en",
                   ),
                   Spacer(),
