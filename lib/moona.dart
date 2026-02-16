@@ -29,5 +29,3 @@ class Moona extends StatelessWidget {
   }
 }
 
-/// logic el auth
-/// UI signIn - emailVerification - forgetPassword

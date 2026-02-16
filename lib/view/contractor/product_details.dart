@@ -268,7 +268,7 @@ class _ProductsDetailsContractorState extends State<ProductsDetailsContractor> {
                     ),
                   ],
                 ),
-                SizedBox(height: 24.h),
+                SizedBox(height: 80.h),
 
                 // Buttons
                 ElevatedButton(
@@ -288,6 +288,26 @@ class _ProductsDetailsContractorState extends State<ProductsDetailsContractor> {
                       productId: product['id'],
                       stock: product['stock'],
                       price: product['price_per_ton'].toDouble(),
+                      type: product['name'],
+                      name: product['company'],
+
+                      image: product['name'] == 'cement'
+                          ? 'assets/images/cement.jpg'
+                          : product['name'].toString().toLowerCase() == 'steel'
+                          ? 'assets/images/steel.jpg'
+                          : product['name'].toString().toLowerCase() == 'bricks'
+                          ? 'assets/images/brick.jpg'
+                          : product['name'].toString().toLowerCase() == 'sand'
+                          ? 'assets/images/sand.jpg'
+                          : product['name'].toString().toLowerCase() == 'gravel'
+                          ? 'assets/images/gravel.jpg'
+                          : product['name'].toString().toLowerCase() == 'bulbs'
+                          ? 'assets/images/bulbs.jpg'
+                          : product['name'].toString().toLowerCase() == 'paint'
+                          ? 'assets/images/paints.jpg'
+                          : product['name'].toString().toLowerCase() == 'wires'
+                          ? 'assets/images/wires.jpg'
+                          : 'assets/images/default.jpg',
                     );
                   },
                   child: const Text("Add to Cart"),
