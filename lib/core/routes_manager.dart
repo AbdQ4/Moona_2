@@ -12,6 +12,7 @@ import 'package:moona/view/contractor/contractor_main_layout.dart';
 import 'package:moona/view/contractor/product_details.dart';
 import 'package:moona/view/contractor/your_cart_page.dart';
 import 'package:moona/view/supplier/finance_page.dart';
+import 'package:moona/view/supplier/home_page.dart';
 import 'package:moona/view/supplier/licence_page.dart';
 import 'package:moona/view/supplier/products_details_supplier.dart';
 import 'package:moona/view/supplier/supplier_main_layout.dart';
@@ -26,13 +27,14 @@ class RoutesManager {
     EmailVerificationScreen.routeName: (context) => EmailVerificationScreen(),
     ContractorMainLayout.routeName: (context) => ContractorMainLayout(),
     SupplierMainLayout.routeName: (context) => SupplierMainLayout(),
+    SupplierHomePage.routeName: (context) => SupplierHomePage(),
     UpdatePassword.routeName: (context) => UpdatePassword(),
     ProductsDetailsSupplier.routeName: (context) => ProductsDetailsSupplier(),
     PendingScreen.routeName: (context) => PendingScreen(),
     AuthRedirect.routeName: (context) => AuthRedirect(),
     RenewLicenseScreen.routeName: (context) => RenewLicenseScreen(),
     FinancePage.routeName: (context) => FinancePage(),
-    LicencePage.routeName: (context) => LicencePage(),
+    SupplierLicencePage.routeName: (context) => SupplierLicencePage(),
     ContractorFinancePage.routeName: (context) => ContractorFinancePage(),
     ProductsDetailsContractor.routeName: (context) =>
         ProductsDetailsContractor(),

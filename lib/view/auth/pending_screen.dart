@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/controller/user_controller.dart';
 import 'package:moona/core/colors_manager.dart';
+import 'package:moona/generated/l10n.dart';
 import 'package:moona/model/user_model.dart';
 import 'package:moona/view/contractor/contractor_main_layout.dart';
 import 'package:moona/view/supplier/supplier_main_layout.dart';
@@ -95,7 +96,7 @@ class _PendingScreenState extends State<PendingScreen> {
                 ),
                 SizedBox(height: 80.h),
                 Text(
-                  "Your account is being verified by admin.\nPlease wait...",
+                  S.of(context).accountBeingReviewed,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20.sp,
@@ -106,7 +107,11 @@ class _PendingScreenState extends State<PendingScreen> {
                   ),
                 ),
                 SizedBox(height: 40.h),
-                const CircularProgressIndicator(),
+                CircularProgressIndicator(
+                  color: themeController.isLight
+                      ? ColorsManager.green
+                      : ColorsManager.gold,
+                ),
               ],
             ),
           ),

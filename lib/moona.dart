@@ -7,7 +7,6 @@ import 'package:moona/core/routes_manager.dart';
 import 'package:moona/core/theme_manager.dart';
 import 'package:moona/generated/l10n.dart';
 import 'package:moona/view/auth/auth_redirect.dart';
-import 'package:moona/view/contractor/contractor_main_layout.dart';
 import 'package:provider/provider.dart';
 
 class Moona extends StatelessWidget {

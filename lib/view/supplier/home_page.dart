@@ -3,23 +3,25 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moona/controller/addItem_controller.dart';
 import 'package:moona/controller/theme_controller.dart';
-
 import 'package:moona/core/colors_manager.dart';
-
+import 'package:moona/generated/l10n.dart';
 import 'package:moona/widgets/custom_addItem.dart';
 import 'package:moona/widgets/home_products.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class SupplierHomePage extends StatefulWidget {
+  const SupplierHomePage({super.key});
+
+  static const String routeName = '/home_screen';
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<SupplierHomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<SupplierHomePage> {
   @override
   void initState() {
+    /// This method uploads the products from the database
     super.initState();
     final provider = Provider.of<AdditemProvider>(context, listen: false);
     provider.getProducts();
@@ -28,10 +30,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final addItemProvider = Provider.of<AdditemProvider>(context);
-
-    final size = MediaQuery.of(context).size;
-    final height = size.height;
-    final width = size.width;
     final themeController = Provider.of<ThemeController>(context);
     return Scaffold(
       backgroundColor: themeController.isLight
@@ -39,6 +37,8 @@ class _HomePageState extends State<HomePage> {
           : ColorsManager.green,
       appBar: AppBar(
         backgroundColor: ColorsManager.green,
+
+        /// Logo section
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -54,6 +54,8 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+
+      /// Add item section
       floatingActionButton: SizedBox(
         height: 60.h,
         width: 60.w,
@@ -85,7 +87,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: SingleChildScrollView(
         child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.8,
+          height: 600.h,
           child: Center(
             child: addItemProvider.products.isEmpty
                 ? Padding(
@@ -94,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          'No Items Added',
+                          S.of(context).noItemsAdded,
                           style: TextStyle(
                             color: themeController.isLight
                                 ? ColorsManager.green
@@ -103,9 +105,9 @@ class _HomePageState extends State<HomePage> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: 10.h),
                         Text(
-                          'Tap the button below to add an item.',
+                          S.of(context).addItems,
                           style: TextStyle(
                             color: themeController.isLight
                                 ? ColorsManager.green

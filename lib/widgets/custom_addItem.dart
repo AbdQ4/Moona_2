@@ -4,9 +4,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:moona/controller/addItem_controller.dart';
+import 'package:moona/controller/lang_controller.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
+import 'package:moona/generated/l10n.dart';
 import 'package:provider/provider.dart';
 
 class CustomAdditem extends StatefulWidget {
@@ -33,17 +36,42 @@ class _CustomAdditemState extends State<CustomAdditem> {
   @override
   Widget build(BuildContext context) {
     final themeController = Provider.of<ThemeController>(context);
+    final langController = Provider.of<LangController>(context);
+    final currentLang = langController.locale;
     final size = MediaQuery.of(context).size;
     final height = size.height; // screen height
     // ignore: unused_local_variable
     final width = size.width; // screen width
 
     final Map<String, List<String>> categories = {
-      "Building Materials": ["Bricks", "Cement", "Sand", "Steel"],
-      "Electrical & Lighting": ["Wires", "Switches", "Bulbs", "Panels"],
-      "Finishing Materials": ["Paint", "Tiles", "Wallpaper"],
-      "Plumbing": ["Pipes", "Taps", "Valves"],
-      "Construction Tools": ["Hammer", "Drill", "Saw"],
+      S.of(context).buildingMaterials: [
+        S.of(context).bricks,
+        S.of(context).cement,
+        S.of(context).sand,
+        S.of(context).steel,
+      ],
+
+      S.of(context).electricalAndLightning: [
+        S.of(context).wires,
+        S.of(context).switches,
+        S.of(context).bulbs,
+        S.of(context).panels,
+      ],
+      S.of(context).finishingMaterilas: [
+        S.of(context).paints,
+        S.of(context).tiles,
+        S.of(context).wallpaper,
+      ],
+      S.of(context).plumbing: [
+        S.of(context).pipes,
+        S.of(context).taps,
+        S.of(context).valves,
+      ],
+      S.of(context).constructionTools: [
+        S.of(context).hummer,
+        S.of(context).drill,
+        S.of(context).saw,
+      ],
     };
 
     return Consumer<AdditemProvider>(
@@ -72,8 +100,8 @@ class _CustomAdditemState extends State<CustomAdditem> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Product Type?",
-                    style: TextStyle(
+                    S.of(context).productType,
+                    style: GoogleFonts.inter(
                       color: themeController.isLight
                           ? ColorsManager.green
                           : ColorsManager.white,
@@ -119,8 +147,8 @@ class _CustomAdditemState extends State<CustomAdditem> {
                         : ColorsManager.white,
                     value: selectedType,
                     hint: Text(
-                      "Select type",
-                      style: TextStyle(
+                      S.of(context).selectType,
+                      style: GoogleFonts.inter(
                         color: themeController.isLight
                             ? ColorsManager.green
                             : ColorsManager.white,
@@ -132,7 +160,7 @@ class _CustomAdditemState extends State<CustomAdditem> {
                             value: e,
                             child: Text(
                               e,
-                              style: TextStyle(
+                              style: GoogleFonts.inter(
                                 color: themeController.isLight
                                     ? ColorsManager.green
                                     : ColorsManager.white,
@@ -188,8 +216,8 @@ class _CustomAdditemState extends State<CustomAdditem> {
                           : categories[selectedType]!.first,
 
                       hint: Text(
-                        "Select item",
-                        style: TextStyle(
+                        S.of(context).selectItem,
+                        style: GoogleFonts.inter(
                           color: themeController.isLight
                               ? ColorsManager.green
                               : ColorsManager.white,
@@ -201,7 +229,7 @@ class _CustomAdditemState extends State<CustomAdditem> {
                               value: e,
                               child: Text(
                                 e,
-                                style: TextStyle(
+                                style: GoogleFonts.inter(
                                   color: themeController.isLight
                                       ? ColorsManager.green
                                       : ColorsManager.white,
@@ -226,24 +254,24 @@ class _CustomAdditemState extends State<CustomAdditem> {
                   Expanded(
                     child: TextField(
                       controller: stockController,
-                      style: TextStyle(
+                      style: GoogleFonts.inter(
                         color: themeController.isLight
                             ? ColorsManager.green
                             : ColorsManager.white,
                       ),
                       decoration: InputDecoration(
-                        hintText: "Stock",
-                        hintStyle: TextStyle(
+                        hintText: S.of(context).stock,
+                        hintStyle: GoogleFonts.inter(
                           color: themeController.isLight
                               ? ColorsManager.green
                               : ColorsManager.white,
                         ),
-                        suffixText: "LT",
-                        suffixStyle: TextStyle(
-                          color: themeController.isLight
-                              ? ColorsManager.green
-                              : ColorsManager.white,
-                        ),
+                        // suffixText: "LT",
+                        // suffixStyle: TextStyle(
+                        //   color: themeController.isLight
+                        //       ? ColorsManager.green
+                        //       : ColorsManager.white,
+                        // ),
                         filled: true,
                         fillColor: themeController.isLight
                             ? ColorsManager.white
@@ -274,14 +302,14 @@ class _CustomAdditemState extends State<CustomAdditem> {
                   Expanded(
                     child: TextField(
                       controller: priceController,
-                      style: TextStyle(
+                      style: GoogleFonts.inter(
                         color: themeController.isLight
                             ? ColorsManager.green
                             : ColorsManager.white,
                       ),
                       decoration: InputDecoration(
-                        hintText: "Price \\ ton",
-                        hintStyle: TextStyle(
+                        hintText: S.of(context).pricePerTon,
+                        hintStyle: GoogleFonts.inter(
                           color: themeController.isLight
                               ? ColorsManager.green
                               : ColorsManager.white,
@@ -318,14 +346,14 @@ class _CustomAdditemState extends State<CustomAdditem> {
 
               TextField(
                 controller: companyController,
-                style: TextStyle(
+                style: GoogleFonts.inter(
                   color: themeController.isLight
                       ? ColorsManager.green
                       : ColorsManager.white,
                 ),
                 decoration: InputDecoration(
-                  hintText: "Company of the Product",
-                  hintStyle: TextStyle(
+                  hintText: S.of(context).companyOfProduct,
+                  hintStyle: GoogleFonts.inter(
                     color: themeController.isLight
                         ? ColorsManager.green
                         : ColorsManager.white,
@@ -358,15 +386,15 @@ class _CustomAdditemState extends State<CustomAdditem> {
 
               TextField(
                 controller: descriptionController,
-                style: TextStyle(
+                style: GoogleFonts.inter(
                   color: themeController.isLight
                       ? ColorsManager.green
                       : ColorsManager.white,
                 ),
                 maxLines: 4,
                 decoration: InputDecoration(
-                  hintText: "Description",
-                  hintStyle: TextStyle(
+                  hintText: S.of(context).description,
+                  hintStyle: GoogleFonts.inter(
                     color: themeController.isLight
                         ? ColorsManager.green
                         : ColorsManager.white,
@@ -401,8 +429,8 @@ class _CustomAdditemState extends State<CustomAdditem> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Delivery?",
-                    style: TextStyle(
+                    S.of(context).delivery,
+                    style: GoogleFonts.inter(
                       color: themeController.isLight
                           ? ColorsManager.green
                           : ColorsManager.white,
@@ -425,8 +453,8 @@ class _CustomAdditemState extends State<CustomAdditem> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Sell on Credit?",
-                    style: TextStyle(
+                    S.of(context).sellOnCredit,
+                    style: GoogleFonts.inter(
                       color: themeController.isLight
                           ? ColorsManager.green
                           : ColorsManager.white,
@@ -464,7 +492,7 @@ class _CustomAdditemState extends State<CustomAdditem> {
                         stockController.text.isEmpty ||
                         priceController.text.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Please fill all fields')),
+                        SnackBar(content: Text(S.of(context).fillAllFields)),
                       );
                       return;
                     }
@@ -491,8 +519,8 @@ class _CustomAdditemState extends State<CustomAdditem> {
                     Navigator.pop(context);
                   },
                   child: Text(
-                    "Add",
-                    style: TextStyle(
+                    S.of(context).add,
+                    style: GoogleFonts.inter(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                       color: themeController.isLight

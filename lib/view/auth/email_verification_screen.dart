@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/controller/user_controller.dart';
+import 'package:moona/core/colors_manager.dart';
 import 'package:moona/core/text_style.dart';
+import 'package:moona/generated/l10n.dart';
 import 'package:moona/view/auth/login_screen.dart';
 import 'package:moona/widgets/custom_elevated_button.dart';
 import 'package:provider/provider.dart';
@@ -48,11 +51,11 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
             children: [
               Center(
                 child: Text(
-                  "Email Verification",
-                  style: safeInter(
+                  S.of(context).emailVerification,
+                  style: GoogleFonts.inter(
                     color: themeController.isLight
-                        ? Colors.green
-                        : Colors.amber,
+                        ? ColorsManager.green
+                        : ColorsManager.gold,
                     fontSize: 30.sp,
                     fontWeight: FontWeight.bold,
                   ),
@@ -60,19 +63,20 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               ),
               SizedBox(height: 40.h),
               Text(
-                "We’ve sent a verification link to your email.\n"
-                "Please confirm your email to continue.",
+                S.of(context).verificationEmailSent,
                 textAlign: TextAlign.center,
                 style: safeInter(
                   fontSize: 16.sp,
-                  color: themeController.isLight ? Colors.green : Colors.amber,
+                  color: themeController.isLight
+                      ? ColorsManager.green
+                      : ColorsManager.gold,
                 ),
               ),
               SizedBox(height: 100.h),
 
               // Resend email
               CustomElevatedButton(
-                title: "Resend Email",
+                title: S.of(context).resendVerificationEmail,
                 onTap: () async {
                   final email = userController.user?.email;
                   if (email != null) {
@@ -80,9 +84,9 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         backgroundColor: themeController.isLight
-                            ? Colors.green
-                            : Colors.white,
-                        content: Text("Verification email sent again"),
+                            ? ColorsManager.green
+                            : ColorsManager.white,
+                        content: Text(S.of(context).verificationEmailResent),
                       ),
                     );
                   }
@@ -91,7 +95,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               SizedBox(height: 40.h),
               // Continue button
               CustomElevatedButton(
-                title: "Continue",
+                title: S.of(context).continueText,
                 onTap: () =>
                     _checkVerification(themeController, userController),
               ),
@@ -116,7 +120,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
         // Refresh failed (likely expired refresh token)
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Session expired. Please log in.")),
+            SnackBar(content: Text(S.of(context).sessionExpiredMessage)),
           );
           Navigator.pushReplacementNamed(context, LoginScreen.routeName);
         }
@@ -127,7 +131,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       if (session == null) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("No active session. Please log in.")),
+            SnackBar(content: Text(S.of(context).sessionExpiredMessage)),
           );
           Navigator.pushReplacementNamed(context, LoginScreen.routeName);
         }
@@ -140,7 +144,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       if (refreshedUser == null) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Session expired. Please log in.")),
+            SnackBar(content: Text(S.of(context).sessionExpiredMessage)),
           );
           Navigator.pushReplacementNamed(context, LoginScreen.routeName);
         }
@@ -152,7 +156,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Email verified! Please log in.")),
+            SnackBar(content: Text(S.of(context).verificationSuccess)),
           );
 
           await auth.signOut();
@@ -162,7 +166,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
         debugPrint("❌ Email not verified yet");
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Please verify your email first")),
+            SnackBar(content: Text(S.of(context).emailNotVerified)),
           );
         }
       }
@@ -171,7 +175,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text("Error: $e")));
+        ).showSnackBar(SnackBar(content: Text(S.of(context).error)));
       }
     }
   }

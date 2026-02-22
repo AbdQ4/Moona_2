@@ -4,26 +4,27 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/controller/user_controller.dart';
 import 'package:moona/core/colors_manager.dart';
+import 'package:moona/generated/l10n.dart';
 import 'package:moona/model/user_model.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
-class LicencePage extends StatefulWidget {
-  const LicencePage({super.key});
+class SupplierLicencePage extends StatefulWidget {
+  const SupplierLicencePage({super.key});
 
   static const String routeName = "/licence_page";
 
   @override
-  State<LicencePage> createState() => _LicencePageState();
+  State<SupplierLicencePage> createState() => _LicencePageState();
 }
 
-class _LicencePageState extends State<LicencePage> {
+class _LicencePageState extends State<SupplierLicencePage> {
   late Future<dynamic> _loadUserFuture;
 
   @override
   void initState() {
     super.initState();
-    // Use listen: false because we only want to call the fetch once here.
+    // This method for fetching user details
     final userController = Provider.of<UserController>(context, listen: false);
     if (userController.user == null) {
       _loadUserFuture = userController.fetchUserDetails();
@@ -46,7 +47,7 @@ class _LicencePageState extends State<LicencePage> {
       ),
       backgroundColor: ColorsManager.green,
       title: Text(
-        "Your License",
+        S.of(context).yourLicense,
         style: GoogleFonts.inter(
           color: ColorsManager.white,
           fontWeight: FontWeight.bold,
@@ -88,7 +89,7 @@ class _LicencePageState extends State<LicencePage> {
               child: Padding(
                 padding: REdgeInsets.symmetric(horizontal: 16.w),
                 child: Text(
-                  "Failed to load user data.\n${snapshot.error}",
+                  "${S.of(context).faildLoadData}.\n${snapshot.error}",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.inter(
                     fontSize: 16.sp,
@@ -121,7 +122,7 @@ class _LicencePageState extends State<LicencePage> {
               child: Column(
                 children: [
                   Text(
-                    "Your Renewal Date is : ${renewDate?.toLocal().toString().split(' ')[0] ?? "date"}",
+                    "${S.of(context).renewalDate} : ${renewDate?.toLocal().toString().split(' ')[0] ?? "date"}",
                     style: GoogleFonts.inter(
                       color: themeController.isLight
                           ? ColorsManager.green
@@ -139,7 +140,7 @@ class _LicencePageState extends State<LicencePage> {
                   ),
                   SizedBox(height: 20.h),
                   Text(
-                    "Your License is : Active",
+                    S.of(context).licenseStatus,
                     style: GoogleFonts.inter(
                       color: themeController.isLight
                           ? ColorsManager.green
@@ -156,7 +157,7 @@ class _LicencePageState extends State<LicencePage> {
                         horizontal: 16.w,
                       ),
                       child: Text(
-                        "You don't have a license yet, please contact support to get one.",
+                        S.of(context).noLicenseMessage,
                         style: GoogleFonts.inter(
                           color: themeController.isLight
                               ? ColorsManager.black

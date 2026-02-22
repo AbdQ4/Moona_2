@@ -6,7 +6,7 @@ class LangController extends ChangeNotifier {
   Locale get locale => _locale;
 
   void changeLanguage(String? langCode) {
-    _locale = Locale(langCode ?? 'en');
+    _locale = Locale(langCode!);
     notifyListeners();
   }
 }

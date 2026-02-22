@@ -3,18 +3,25 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moona/controller/addItem_controller.dart';
 import 'package:moona/controller/theme_controller.dart';
+import 'package:moona/core/assets_manager.dart';
 import 'package:moona/core/colors_manager.dart';
+import 'package:moona/generated/l10n.dart';
 import 'package:moona/widgets/product_card_supplier.dart';
 import 'package:provider/provider.dart';
 
 class CategoryPage extends StatelessWidget {
-  final String categoryName;
-  const CategoryPage({super.key, required this.categoryName});
+  final String categoryKey; // used for filtering
+  final String categoryTitle; // used for UI
+
+  const CategoryPage({
+    super.key,
+    required this.categoryKey,
+    required this.categoryTitle,
+  });
 
   @override
   Widget build(BuildContext context) {
     final themeController = Provider.of<ThemeController>(context);
-
     final addItemProvider = Provider.of<AdditemProvider>(
       context,
       listen: false,
@@ -23,13 +30,8 @@ class CategoryPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorsManager.green,
-        leading: BackButton(
-          color: themeController.isLight
-              ? ColorsManager.white
-              : ColorsManager.gold,
-        ),
         title: Text(
-          categoryName,
+          categoryTitle, // translated title
           style: GoogleFonts.inter(
             color: themeController.isLight
                 ? ColorsManager.white
@@ -37,6 +39,11 @@ class CategoryPage extends StatelessWidget {
           ),
         ),
         centerTitle: true,
+        leading: BackButton(
+          color: themeController.isLight
+              ? ColorsManager.white
+              : ColorsManager.gold,
+        ),
       ),
       backgroundColor: themeController.isLight
           ? ColorsManager.white
@@ -46,42 +53,25 @@ class CategoryPage extends StatelessWidget {
         child: FutureBuilder(
           future: addItemProvider.getProducts(),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
+            if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());
             }
-            if (snapshot.hasError) {
-              return Center(child: Text("Error: ${snapshot.error}"));
-            }
-            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+
+            final products = snapshot.data!;
+
+            // Filter products based on the categoryKey
+            final filtered = products.where((p) {
+              return p['type'].toString().toLowerCase().trim() ==
+                  categoryKey.toLowerCase();
+            }).toList();
+
+            if (filtered.isEmpty) {
               return Center(
                 child: Text(
-                  "No items yet in $categoryName",
+                  "${S.of(context).noItems} $categoryTitle",
                   style: TextStyle(
                     color: themeController.isLight
-                        ? ColorsManager.black
-                        : ColorsManager.gold,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              );
-            }
-
-            final categoryProducts = snapshot.data!
-                .where(
-                  (p) =>
-                      p['type'].toString().toLowerCase() ==
-                      categoryName.toLowerCase(),
-                )
-                .toList();
-
-            if (categoryProducts.isEmpty) {
-              return Center(
-                child: Text(
-                  "No items yet in $categoryName",
-                  style: TextStyle(
-                    color: themeController.isLight
-                        ? ColorsManager.black
+                        ? ColorsManager.green
                         : ColorsManager.gold,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -91,30 +81,33 @@ class CategoryPage extends StatelessWidget {
             }
 
             return GridView.builder(
-              itemCount: categoryProducts.length,
+              itemCount: filtered.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                childAspectRatio: 0.65,
+              ),
               itemBuilder: (context, index) {
-                final productName = categoryProducts[index]['name']
-                    .toString()
-                    .toLowerCase();
-                final product = categoryProducts[index];
+                final product = filtered[index];
+
+                final Map<String, String> productImages = {
+                  "cement": AssetsManager.cement,
+                  "steel": AssetsManager.steel,
+                  "bricks": AssetsManager.bricks,
+                  "sand": AssetsManager.sand,
+                  "gravel": "assets/images/gravel.jpg",
+                  "bulbs": AssetsManager.bulbs,
+                  "paints": AssetsManager.paints,
+                  "wires": AssetsManager.wires,
+                };
+
+                final imagePath =
+                    productImages[product['name'].toLowerCase()] ??
+                    AssetsManager.defaultImage;
+
                 return ProductCardSupplier(
-                  imageAddress: productName == 'cement'
-                      ? 'assets/images/cement.jpg'
-                      : productName == 'steel'
-                      ? 'assets/images/steel.jpg'
-                      : productName == 'bricks'
-                      ? 'assets/images/brick.jpg'
-                      : productName == 'sand'
-                      ? 'assets/images/sand.jpg'
-                      : productName == 'gravel'
-                      ? 'assets/images/gravel.jpg'
-                      : productName == 'bulbs'
-                      ? 'assets/images/bulbs.jpg'
-                      : productName == 'paint'
-                      ? 'assets/images/paints.jpg'
-                      : productName == 'wires'
-                      ? 'assets/images/wires.jpg'
-                      : 'assets/images/default.jpg',
+                  imageAddress: imagePath,
                   companyName: product['company'] ?? 'Unknown Company',
                   location: product['location'] ?? 'Unknown Location',
                   price: product['price_per_ton'] != null
@@ -124,12 +117,6 @@ class CategoryPage extends StatelessWidget {
                   currentProduct: product,
                 );
               },
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                childAspectRatio: 0.65,
-              ),
             );
           },
         ),

@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:moona/controller/theme_controller.dart';
+import 'package:moona/core/assets_manager.dart';
 import 'package:moona/core/colors_manager.dart';
+import 'package:moona/generated/l10n.dart';
 import 'package:moona/view/supplier/category_page.dart';
 import 'package:provider/provider.dart';
 
 class HomeProducts extends StatelessWidget {
   const HomeProducts({super.key});
-
-  final List<Map<String, String>> categories = const [
-    {"title": "Building Materials", "image": "assets/images/1.jpg"},
-    {"title": "Electrical & Lighting", "image": "assets/images/2.jpg"},
-    {"title": "Finishing Materials", "image": "assets/images/3.jpg"},
-    {"title": "Plumbing", "image": "assets/images/4.jpg"},
-    {"title": "Construction Tools", "image": "assets/images/5.jpg"},
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +15,34 @@ class HomeProducts extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final height = size.height;
     final width = size.width;
+
+    final List<Map<String, String>> categories = [
+      {
+        "key": "Building Materials",
+        "title": S.of(context).buildingMaterials,
+        "image": AssetsManager.buildingMaterials,
+      },
+      {
+        "key": "Electrical & Lightning",
+        "title": S.of(context).electricalAndLightning,
+        "image": AssetsManager.electricalAndLightning,
+      },
+      {
+        "key": "Finishing Materials",
+        "title": S.of(context).finishingMaterilas,
+        "image": AssetsManager.finishingMaterials,
+      },
+      {
+        "key": "Plumbing",
+        "title": S.of(context).plumbing,
+        "image": AssetsManager.plumbingMaterials,
+      },
+      {
+        "key": "Tools",
+        "title": S.of(context).constructionTools,
+        "image": AssetsManager.constructionMaterials,
+      },
+    ];
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -40,8 +62,10 @@ class HomeProducts extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) =>
-                        CategoryPage(categoryName: category["title"]!),
+                    builder: (_) => CategoryPage(
+                      categoryKey: category["key"]!,
+                      categoryTitle: category["title"]!,
+                    ),
                   ),
                 );
               },

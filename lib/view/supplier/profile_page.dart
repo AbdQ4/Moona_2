@@ -7,6 +7,7 @@ import 'package:moona/controller/lang_controller.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/controller/user_controller.dart';
 import 'package:moona/core/colors_manager.dart';
+import 'package:moona/generated/l10n.dart';
 import 'package:moona/view/supplier/finance_page.dart';
 import 'package:moona/view/supplier/licence_page.dart';
 import 'package:moona/widgets/custom_drop_down_menu.dart';
@@ -28,6 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
+    // Loading user details from cashe first then from database
     super.initState();
     final userController = Provider.of<UserController>(context, listen: false);
     userController.loadUserFromCache().then(
@@ -46,6 +48,8 @@ class _ProfilePageState extends State<ProfilePage> {
       backgroundColor: themeController.isLight
           ? ColorsManager.green
           : ColorsManager.gold,
+
+      /// Menu section
       endDrawer: Drawer(
         backgroundColor: themeController.isLight
             ? ColorsManager.white
@@ -81,7 +85,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Text(
-                      user?.name ?? "Error",
+                      user?.name ?? S.of(context).error,
                       style: GoogleFonts.inter(
                         color: themeController.isLight
                             ? ColorsManager.green
@@ -102,7 +106,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     : ColorsManager.white,
               ),
               title: Text(
-                "Change Name",
+                S.of(context).changeName,
                 style: GoogleFonts.inter(
                   color: themeController.isLight
                       ? ColorsManager.green
@@ -136,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "Change Name",
+                                  S.of(context).changeName,
                                   style: GoogleFonts.inter(
                                     color: themeController.isLight
                                         ? ColorsManager.green
@@ -166,7 +170,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     : ColorsManager.white,
                               ),
                               decoration: InputDecoration(
-                                labelText: "Enter New Name",
+                                labelText: S.of(context).enterNewName,
                                 labelStyle: GoogleFonts.inter(
                                   color: themeController.isLight
                                       ? ColorsManager.green
@@ -199,7 +203,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ),
                             CustomElevatedButton(
-                              title: "Save",
+                              title: S.of(context).save,
                               onTap: () {
                                 userController.updateUserName(
                                   newName: newName.text,
@@ -226,7 +230,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     : ColorsManager.white,
               ),
               title: Text(
-                "Change Phone Number",
+                S.of(context).changePhoneNo,
                 style: GoogleFonts.inter(
                   color: themeController.isLight
                       ? ColorsManager.green
@@ -260,7 +264,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "Change Phone Number",
+                                  S.of(context).changePhoneNo,
                                   style: GoogleFonts.inter(
                                     color: themeController.isLight
                                         ? ColorsManager.green
@@ -290,7 +294,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     : ColorsManager.white,
                               ),
                               decoration: InputDecoration(
-                                labelText: "Enter New Phone Number",
+                                labelText: S.of(context).enterNewPhoneNo,
                                 labelStyle: GoogleFonts.inter(
                                   color: themeController.isLight
                                       ? ColorsManager.green
@@ -323,7 +327,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ),
                             CustomElevatedButton(
-                              title: "Save",
+                              title: S.of(context).save,
                               onTap: () {
                                 userController.updateUserPhone(
                                   newPhone: newPhone.text,
@@ -350,7 +354,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     : ColorsManager.white,
               ),
               title: Text(
-                "Sales History",
+                S.of(context).salesHistory,
                 style: GoogleFonts.inter(
                   color: themeController.isLight
                       ? ColorsManager.green
@@ -371,7 +375,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     : ColorsManager.white,
               ),
               title: Text(
-                "Review License",
+                S.of(context).reviewLisense,
                 style: GoogleFonts.inter(
                   color: themeController.isLight
                       ? ColorsManager.green
@@ -380,7 +384,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               onTap: () {
-                Navigator.pushNamed(context, LicencePage.routeName);
+                Navigator.pushNamed(context, SupplierLicencePage.routeName);
               },
             ),
             Divider(),
@@ -392,7 +396,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     : ColorsManager.white,
               ),
               title: Text(
-                "Our Terms and Conditions",
+                S.of(context).termsAndConditions,
                 style: GoogleFonts.inter(
                   color: themeController.isLight
                       ? ColorsManager.green
@@ -411,7 +415,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     : ColorsManager.white,
               ),
               title: Text(
-                "Privacy Policy",
+                S.of(context).privacyPolicy,
                 style: GoogleFonts.inter(
                   color: themeController.isLight
                       ? ColorsManager.green
@@ -430,7 +434,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     : ColorsManager.white,
               ),
               title: Text(
-                "Help & Support",
+                S.of(context).helpAndSupport,
                 style: GoogleFonts.inter(
                   color: themeController.isLight
                       ? ColorsManager.green
@@ -486,7 +490,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
-                    user?.name ?? "Error",
+                    user?.name ?? S.of(context).error,
                     style: GoogleFonts.inter(
                       color: themeController.isLight
                           ? ColorsManager.white
@@ -533,7 +537,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Account details : ",
+                    "${S.of(context).accountDetails} : ",
                     style: GoogleFonts.inter(
                       color: themeController.isLight
                           ? ColorsManager.green
@@ -569,7 +573,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      "Account Details",
+                                      S.of(context).accountDetails,
                                       style: GoogleFonts.inter(
                                         color: themeController.isLight
                                             ? ColorsManager.green
@@ -594,7 +598,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 SizedBox(height: 20.h),
                                 _cardBuilder(
                                   icon: Icons.person,
-                                  data: user?.name ?? "Error",
+                                  data: user?.name ?? S.of(context).error,
                                   themeController: themeController,
                                   lightColor: ColorsManager.green,
                                   darkColor: ColorsManager.white,
@@ -603,7 +607,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 SizedBox(height: 20.h),
                                 _cardBuilder(
                                   icon: Icons.email,
-                                  data: user?.email ?? "Error",
+                                  data: user?.email ?? S.of(context).error,
                                   themeController: themeController,
                                   lightColor: ColorsManager.green,
                                   darkColor: ColorsManager.white,
@@ -612,7 +616,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 SizedBox(height: 20.h),
                                 _cardBuilder(
                                   icon: Icons.phone,
-                                  data: user?.phoneNo ?? "Error",
+                                  data: user?.phoneNo ?? S.of(context).error,
                                   themeController: themeController,
                                   lightColor: ColorsManager.green,
                                   darkColor: ColorsManager.white,
@@ -621,7 +625,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 SizedBox(height: 20.h),
                                 _cardBuilder(
                                   icon: Icons.credit_card,
-                                  data: user?.tax ?? "Error",
+                                  data: user?.tax ?? S.of(context).error,
                                   themeController: themeController,
                                   lightColor: ColorsManager.green,
                                   darkColor: ColorsManager.white,
@@ -630,7 +634,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 SizedBox(height: 20.h),
                                 _cardBuilder(
                                   icon: Icons.badge,
-                                  data: user?.role ?? "Error",
+                                  data: user?.role ?? S.of(context).error,
                                   themeController: themeController,
                                   lightColor: ColorsManager.green,
                                   darkColor: ColorsManager.white,
@@ -660,7 +664,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         children: [
                           _cardBuilder(
                             icon: Icons.email,
-                            data: user?.email ?? "Error",
+                            data: user?.email ?? S.of(context).error,
                             themeController: themeController,
                             lightColor: ColorsManager.white,
                             darkColor: ColorsManager.green,
@@ -668,7 +672,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           _cardBuilder(
                             icon: Icons.phone,
-                            data: user?.phoneNo ?? "Error",
+                            data: user?.phoneNo ?? S.of(context).error,
                             themeController: themeController,
                             lightColor: ColorsManager.white,
                             darkColor: ColorsManager.green,
@@ -676,7 +680,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           _cardBuilder(
                             icon: Icons.credit_card,
-                            data: user?.tax ?? "Error",
+                            data: user?.tax ?? S.of(context).error,
                             themeController: themeController,
                             lightColor: ColorsManager.white,
                             darkColor: ColorsManager.green,
@@ -688,14 +692,16 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   SizedBox(height: 40.h),
                   CustomDropDownMenu(
-                    title: "Select Theme",
-                    value1: "light",
-                    label1: "Light Theme",
-                    value2: "dark",
-                    label2: "Dark Theme",
-                    initialValue: themeController.isLight ? "light" : "dark",
+                    title: S.of(context).selectTheme,
+                    value1: S.of(context).light,
+                    label1: S.of(context).lightTheme,
+                    value2: S.of(context).dark,
+                    label2: S.of(context).darkTheme,
+                    initialValue: themeController.isLight
+                        ? S.of(context).light
+                        : S.of(context).dark,
                     onSelected: (value) {
-                      if (value == "light") {
+                      if (value == S.of(context).light) {
                         themeController.switchToLight();
                       } else {
                         themeController.switchToDark();
@@ -704,7 +710,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   SizedBox(height: 40.h),
                   CustomDropDownMenu(
-                    title: "Select Language",
+                    title: S.of(context).selectLanguage,
                     value1: "en",
                     label1: "English",
                     value2: "ar",
@@ -728,7 +734,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       userController.logout(context);
                     },
                     child: Text(
-                      "Logout",
+                      S.of(context).logout,
                       style: GoogleFonts.inter(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.bold,

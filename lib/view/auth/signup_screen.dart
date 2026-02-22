@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:moona/controller/checkbox_controller.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/controller/license_controller.dart';
@@ -9,6 +10,7 @@ import 'package:moona/controller/validation_methods.dart';
 import 'package:moona/core/assets_manager.dart';
 import 'package:moona/core/colors_manager.dart';
 import 'package:moona/core/text_style.dart';
+import 'package:moona/generated/l10n.dart';
 import 'package:moona/model/user_model.dart';
 import 'package:moona/widgets/custom_text_form_field.dart';
 import 'package:moona/widgets/password_text_field.dart';
@@ -86,7 +88,7 @@ class _SignupScreenState extends State<SignupScreen> {
               children: [
                 Center(
                   child: Text(
-                    "Sign Up",
+                    S.of(context).signUp,
                     style: safeInter(
                       color: themeController.isLight
                           ? ColorsManager.green
@@ -98,25 +100,25 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 SizedBox(height: 9.h),
                 CustomTextFormField(
-                  label: "Company name",
+                  label: S.of(context).companyName,
                   prefixIconPath: AssetsManager.companyIcon,
                   controller: _companyController,
                   validator: ValidationMethods.validateCompanyName,
                 ),
                 CustomTextFormField(
-                  label: "E-mail",
+                  label: S.of(context).email,
                   prefixIconPath: AssetsManager.emailIcon,
                   controller: _emailController,
                   validator: ValidationMethods.validateEmail,
                 ),
                 CustomTextFormField(
-                  label: "Phone NO.",
+                  label: S.of(context).phoneNo,
                   prefixIconPath: AssetsManager.phoneIcon,
                   controller: _phoneController,
                   // validator: ValidationMethods.validatePhone,
                 ),
                 CustomTextFormField(
-                  label: "TAX",
+                  label: S.of(context).tax,
                   prefixIconPath: AssetsManager.taxIcon,
                   controller: _taxController,
                   validator: ValidationMethods.validateTax,
@@ -145,7 +147,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                         SizedBox(width: 14.w),
                         Text(
-                          "Upload license as PDF",
+                          S.of(context).uploadPDFLicense,
                           style: safeInter(
                             color: ColorsManager.green,
                             fontSize: 16.sp,
@@ -156,12 +158,12 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
                 PasswordTextField(
-                  label: "Password",
+                  label: S.of(context).password,
                   controller: _passwordController,
                   validator: ValidationMethods.validatePassword,
                 ),
                 PasswordTextField(
-                  label: "Re-Password",
+                  label: S.of(context).rePassword,
                   controller: _confirmPasswordController,
                   validator: (value) =>
                       ValidationMethods.validateConfirmPassword(
@@ -180,8 +182,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           : WidgetStateProperty.all(ColorsManager.white),
                     ),
                     Text(
-                      "Contractor",
-                      style: safeInter(
+                      S.of(context).contractor,
+                      style: GoogleFonts.inter(
                         color: themeController.isLight
                             ? ColorsManager.green
                             : ColorsManager.white,
@@ -197,8 +199,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           : WidgetStateProperty.all(ColorsManager.white),
                     ),
                     Text(
-                      "Supplier",
-                      style: safeInter(
+                      S.of(context).supplier,
+                      style: GoogleFonts.inter(
                         color: themeController.isLight
                             ? ColorsManager.green
                             : ColorsManager.white,
@@ -229,8 +231,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   title: Row(
                     children: [
                       Text(
-                        "I accept the ",
-                        style: safeInter(
+                        S.of(context).accept,
+                        style: GoogleFonts.inter(
                           color: themeController.isLight
                               ? ColorsManager.green
                               : ColorsManager.white,
@@ -238,8 +240,8 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
                       Text(
-                        "Terms ",
-                        style: safeInter(
+                        S.of(context).terms,
+                        style: GoogleFonts.inter(
                           color: themeController.isLight
                               ? ColorsManager.green
                               : ColorsManager.white,
@@ -248,8 +250,8 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
                       Text(
-                        "and ",
-                        style: safeInter(
+                        S.of(context).and,
+                        style: GoogleFonts.inter(
                           color: themeController.isLight
                               ? ColorsManager.green
                               : ColorsManager.white,
@@ -257,8 +259,8 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
                       Text(
-                        "Conditions",
-                        style: safeInter(
+                        S.of(context).conditions,
+                        style: GoogleFonts.inter(
                           color: themeController.isLight
                               ? ColorsManager.green
                               : ColorsManager.white,
@@ -285,17 +287,6 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   onPressed: () {
                     if (checkboxController.isChecked == true) {
-                      // if (_formKey.currentState!.validate()) {
-                      //   userController.signUpUser(
-                      //     context: context,
-                      //     email: _emailController.text,
-                      //     password: _passwordController.text,
-                      //     name: _companyController.text,
-                      //     phoneNo: _phoneController.text,
-                      //     tax: _taxController.text,
-                      //     role: context.read<UserRoleController>().selectedRole!,
-                      //   );
-                      // }
                       _signUp();
                     } else {
                       SnackBar(
@@ -303,8 +294,8 @@ class _SignupScreenState extends State<SignupScreen> {
                             ? ColorsManager.green
                             : ColorsManager.white,
                         content: Text(
-                          "You need to accept our terms and conditions",
-                          style: safeInter(
+                          S.of(context).needToAcceptTerms,
+                          style: GoogleFonts.inter(
                             color: themeController.isLight
                                 ? ColorsManager.white
                                 : ColorsManager.green,
@@ -314,8 +305,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     }
                   },
                   child: Text(
-                    "Sign Up",
-                    style: safeInter(
+                    S.of(context).signUp,
+                    style: GoogleFonts.inter(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
                     ),
