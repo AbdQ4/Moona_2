@@ -9,7 +9,7 @@ import 'package:moona/generated/l10n.dart';
 import 'package:moona/widgets/product_card_supplier.dart';
 import 'package:provider/provider.dart';
 
-class CategoryPage extends StatelessWidget {
+class CategoryPage extends StatefulWidget {
   final String categoryKey; // used for filtering
   final String categoryTitle; // used for UI
 
@@ -20,18 +20,20 @@ class CategoryPage extends StatelessWidget {
   });
 
   @override
+  State<CategoryPage> createState() => _CategoryPageState();
+}
+
+class _CategoryPageState extends State<CategoryPage> {
+  @override
   Widget build(BuildContext context) {
     final themeController = Provider.of<ThemeController>(context);
-    final addItemProvider = Provider.of<AdditemProvider>(
-      context,
-      listen: false,
-    );
+    final addItemProvider = Provider.of<AdditemProvider>(context, listen: true);
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorsManager.green,
         title: Text(
-          categoryTitle, // translated title
+          widget.categoryTitle,
           style: GoogleFonts.inter(
             color: themeController.isLight
                 ? ColorsManager.white
@@ -50,33 +52,18 @@ class CategoryPage extends StatelessWidget {
           : ColorsManager.green,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
-        child: FutureBuilder(
-          future: addItemProvider.getProducts(),
+        child: StreamBuilder<List<Map<String, dynamic>>>(
+          stream: addItemProvider.streamProducts(widget.categoryKey),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());
             }
 
-            final products = snapshot.data!;
-
-            // Filter products based on the categoryKey
-            final filtered = products.where((p) {
-              return p['type'].toString().toLowerCase().trim() ==
-                  categoryKey.toLowerCase();
-            }).toList();
+            final filtered = snapshot.data!;
 
             if (filtered.isEmpty) {
               return Center(
-                child: Text(
-                  "${S.of(context).noItems} $categoryTitle",
-                  style: TextStyle(
-                    color: themeController.isLight
-                        ? ColorsManager.green
-                        : ColorsManager.gold,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                child: Text("${S.of(context).noItems} ${widget.categoryTitle}"),
               );
             }
 
@@ -84,30 +71,19 @@ class CategoryPage extends StatelessWidget {
               itemCount: filtered.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                childAspectRatio: 0.65,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                childAspectRatio: 0.61,
               ),
               itemBuilder: (context, index) {
                 final product = filtered[index];
-
-                final Map<String, String> productImages = {
-                  "cement": AssetsManager.cement,
-                  "steel": AssetsManager.steel,
-                  "bricks": AssetsManager.bricks,
-                  "sand": AssetsManager.sand,
-                  "gravel": "assets/images/gravel.jpg",
-                  "bulbs": AssetsManager.bulbs,
-                  "paints": AssetsManager.paints,
-                  "wires": AssetsManager.wires,
-                };
-
-                final imagePath =
-                    productImages[product['name'].toLowerCase()] ??
-                    AssetsManager.defaultImage;
+                final imageUrl = product['image_url'] ?? '';
 
                 return ProductCardSupplier(
-                  imageAddress: imagePath,
+                  imageAddress: imageUrl.isNotEmpty
+                      ? imageUrl
+                      : AssetsManager.defaultImage,
+
                   companyName: product['company'] ?? 'Unknown Company',
                   location: product['location'] ?? 'Unknown Location',
                   price: product['price_per_ton'] != null

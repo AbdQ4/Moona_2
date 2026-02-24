@@ -1,5 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 class AdditemProvider with ChangeNotifier {
   final _supabase = Supabase.instance.client;
@@ -13,6 +19,11 @@ class AdditemProvider with ChangeNotifier {
   bool get isDelivery => _isDelivery;
   bool get isCredit => _isCredit;
 
+  File? _image;
+  File? get image => _image;
+
+  final ImagePicker _picker = ImagePicker();
+
   /// Fetch all products from Supabase
   Future<List<Map<String, dynamic>>> getProducts() async {
     try {
@@ -24,19 +35,18 @@ class AdditemProvider with ChangeNotifier {
 
       _products = List<Map<String, dynamic>>.from(response);
       notifyListeners();
-      return _products; // ✅ return the list
+      return _products;
     } catch (e) {
       debugPrint("Error fetching products: $e");
-      return []; // ✅ return empty list on error
+      return [];
     }
   }
 
   /// Stream data from Supabase
-
   Stream<List<Map<String, dynamic>>> streamProducts(String type) {
     return _supabase
         .from('products')
-        .stream(primaryKey: ['id']) // primary key must be in table
+        .stream(primaryKey: ['id'])
         .eq('type', type)
         .map((rows) => List<Map<String, dynamic>>.from(rows));
   }
@@ -51,9 +61,16 @@ class AdditemProvider with ChangeNotifier {
     required bool isDelivery,
     required bool isCredit,
     required String name,
-    String? imageUrl,
+    required double lng,
+    required double lat,
+    File? imageFile,
   }) async {
     try {
+      String? imageUrl;
+      if (imageFile != null) {
+        imageUrl = await uploadImageToSupabase(imageFile);
+      }
+
       final response = await _supabase
           .from('products')
           .insert({
@@ -66,9 +83,11 @@ class AdditemProvider with ChangeNotifier {
             'is_delivery': isDelivery,
             'is_credit': isCredit,
             'name': name,
+            'longitude': lng,
+            'latitude': lat,
           })
           .select(
-            'id, price_per_ton, description, image_url, type, company, stock, is_delivery, is_credit, name',
+            'id, price_per_ton, description, image_url, type, company, stock, is_delivery, is_credit, name, longitude, latitude',
           );
 
       if (response.isNotEmpty) {
@@ -86,7 +105,7 @@ class AdditemProvider with ChangeNotifier {
 
   /// Update product details
   Future<Map<String, dynamic>?> updateProduct({
-    required String productId, // keep as String
+    required String productId,
     double? price,
     String? description,
     String? type,
@@ -94,10 +113,15 @@ class AdditemProvider with ChangeNotifier {
     double? stock,
     bool? isDelivery,
     bool? isCredit,
-    String? imageUrl,
+    File? imageFile,
     String? name,
   }) async {
     try {
+      String? imageUrl;
+      if (imageFile != null) {
+        imageUrl = await uploadImageToSupabase(imageFile);
+      }
+
       final updatedData = {
         if (price != null) 'price_per_ton': price,
         if (description != null) 'description': description,
@@ -113,14 +137,13 @@ class AdditemProvider with ChangeNotifier {
       final response = await _supabase
           .from('products')
           .update(updatedData)
-          .eq('id', productId) // ✅ UUID string comparison
+          .eq('id', productId)
           .select();
 
       if (response.isEmpty) return null;
 
       final updatedProduct = response.first;
 
-      // Update local list
       final index = _products.indexWhere((p) => p['id'] == productId);
       if (index != -1) {
         _products[index] = updatedProduct;
@@ -136,90 +159,26 @@ class AdditemProvider with ChangeNotifier {
   }
 
   /// Delete product by ID
-  /// Returns true on success, false on failure.
-  /// Will print detailed debug info to help identify the problem.
   Future<bool> deleteProduct(dynamic productId) async {
     try {
-      debugPrint(
-        ">>> deleteProduct called with productId: $productId (type=${productId.runtimeType})",
-      );
-
-      // 1) Try to find the row first (attempt as-is)
-      final findResult = await _supabase
-          .from('products')
-          .select('id, name')
-          .eq('id', productId);
-
-      debugPrint(">>> findResult (eq as-is) -> $findResult");
-
-      // 2) If nothing found, try alternative types (string / int)
-      if (((findResult.isEmpty))) {
-        // try string version
-        final strId = productId.toString();
-        final findStr = await _supabase
-            .from('products')
-            .select('id, name')
-            .eq('id', strId);
-        debugPrint(">>> findResult (eq string) -> $findStr");
-
-        // try numeric version if productId looks numeric
-        if (int.tryParse(strId) != null) {
-          final intId = int.parse(strId);
-          final findInt = await _supabase
-              .from('products')
-              .select('id, name')
-              .eq('id', intId);
-          debugPrint(">>> findResult (eq int) -> $findInt");
-        }
-      }
-
-      // 3) Perform delete and request returning rows using .select()
       final deleteResult = await _supabase
           .from('products')
           .delete()
           .eq('id', productId)
           .select('id');
 
-      debugPrint(">>> deleteResult -> $deleteResult");
-
-      // Some Supabase setups return [] on delete success or return deleted rows.
-      final deletedCount = (deleteResult is List)
-          ? deleteResult.length
-          : (1);
+      final deletedCount = (deleteResult is List) ? deleteResult.length : 1;
       if (deletedCount > 0) {
         _products.removeWhere(
           (p) => p['id'].toString() == productId.toString(),
         );
         notifyListeners();
-        debugPrint("✅ Product deleted locally and remotely. id=$productId");
+        debugPrint("✅ Product deleted. id=$productId");
         return true;
-      } else {
-        // maybe the API returned empty list but row was deleted — check by trying to select again:
-        final check = await _supabase
-            .from('products')
-            .select('id')
-            .eq('id', productId);
-        debugPrint(">>> post-delete check select -> $check");
-        if ((check.isEmpty)) {
-          // row not found after delete, treat as success
-          _products.removeWhere(
-            (p) => p['id'].toString() == productId.toString(),
-          );
-          notifyListeners();
-          debugPrint(
-            "✅ Delete appears successful (row not found after). id=$productId",
-          );
-          return true;
-        }
-
-        debugPrint(
-          "❌ Delete returned no deleted rows and row still exists. id=$productId",
-        );
-        return false;
       }
-    } catch (e, st) {
+      return false;
+    } catch (e) {
       debugPrint("❌ deleteProduct exception: $e");
-      debugPrint("❌ stacktrace: $st");
       return false;
     }
   }
@@ -228,13 +187,76 @@ class AdditemProvider with ChangeNotifier {
   void toggleDelivery(bool value) {
     _isDelivery = value;
     notifyListeners();
-    debugPrint("Delivery option set to $_isDelivery");
   }
 
   /// Toggle credit
   void toggleCredit(bool value) {
     _isCredit = value;
     notifyListeners();
-    debugPrint("Credit option set to $_isCredit");
+  }
+
+  /// Pick image from gallery
+  Future<void> pickImageFromGallery() async {
+    try {
+      final XFile? pickedFile = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 80,
+      );
+
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+        notifyListeners();
+        debugPrint("✅ Image picked from gallery: ${pickedFile.path}");
+      }
+    } catch (e) {
+      debugPrint("❌ Error picking image from gallery: $e");
+    }
+  }
+
+  /// Pick image from camera
+  Future<void> pickImageFromCamera() async {
+    try {
+      final XFile? pickedFile = await _picker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 80,
+      );
+
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+        notifyListeners();
+        debugPrint("✅ Image captured from camera: ${pickedFile.path}");
+      }
+    } catch (e) {
+      debugPrint("❌ Error capturing image from camera: $e");
+    }
+  }
+
+  /// Clear selected image
+  void clearImage() {
+    _image = null;
+    notifyListeners();
+  }
+
+  /// Upload image to Supabase storage and return public URL
+  Future<String?> uploadImageToSupabase(File file) async {
+    try {
+      final uuid = Uuid().v4();
+      final fileExt = file.path.split('.').last;
+      final fileName = '$uuid.$fileExt';
+      final bucket = 'product_image';
+
+      final response = await _supabase.storage
+          .from(bucket)
+          .upload(fileName, file);
+
+      if (response != null) {
+        final publicUrl = _supabase.storage.from(bucket).getPublicUrl(fileName);
+        debugPrint("✅ Image uploaded: $publicUrl");
+        return publicUrl;
+      }
+    } catch (e) {
+      debugPrint("❌ Error uploading image to Supabase: $e");
+    }
+    return null;
   }
 }

@@ -868,6 +868,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Choose product's image`
+  String get chooseImage {
+    return Intl.message(
+      'Choose product\'s image',
+      name: 'chooseImage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Press here to clear the image`
+  String get clearImage {
+    return Intl.message(
+      'Press here to clear the image',
+      name: 'clearImage',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

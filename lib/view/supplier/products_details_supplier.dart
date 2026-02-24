@@ -3,8 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moona/controller/addItem_controller.dart';
 import 'package:moona/controller/theme_controller.dart';
+import 'package:moona/core/assets_manager.dart';
 import 'package:moona/core/colors_manager.dart';
 import 'package:moona/generated/l10n.dart';
+import 'package:moona/widgets/custom_image_pickers.dart';
 import 'package:provider/provider.dart';
 
 class ProductsDetailsSupplier extends StatefulWidget {
@@ -91,24 +93,8 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                 // Product Image
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12.r),
-                  child: Image.asset(
-                    product['name'] == 'cement'
-                        ? 'assets/images/cement.jpg'
-                        : product['name'].toString().toLowerCase() == 'steel'
-                        ? 'assets/images/steel.jpg'
-                        : product['name'].toString().toLowerCase() == 'bricks'
-                        ? 'assets/images/brick.jpg'
-                        : product['name'].toString().toLowerCase() == 'sand'
-                        ? 'assets/images/sand.jpg'
-                        : product['name'].toString().toLowerCase() == 'gravel'
-                        ? 'assets/images/gravel.jpg'
-                        : product['name'].toString().toLowerCase() == 'bulbs'
-                        ? 'assets/images/bulbs.jpg'
-                        : product['name'].toString().toLowerCase() == 'paint'
-                        ? 'assets/images/paints.jpg'
-                        : product['name'].toString().toLowerCase() == 'wires'
-                        ? 'assets/images/wires.jpg'
-                        : 'assets/images/default.jpg',
+                  child: Image.network(
+                    product['image_url'],
                     height: 200.h,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -333,6 +319,8 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                                 child: SingleChildScrollView(
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "${S.of(context).editProduct} - ${product['company']}",
@@ -345,6 +333,17 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                                         ),
                                       ),
                                       SizedBox(height: 16.h),
+                                      Text(
+                                        S.of(context).chooseImage,
+                                        style: GoogleFonts.inter(
+                                          color: themeController.isLight
+                                              ? ColorsManager.green
+                                              : ColorsManager.gold,
+                                          fontSize: 16.sp,
+                                        ),
+                                      ),
+                                      CustomImagePickers(),
+                                      SizedBox(height: 10.h),
                                       TextFormField(
                                         style: GoogleFonts.inter(
                                           color: themeController.isLight

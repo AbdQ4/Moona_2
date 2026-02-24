@@ -105,5 +105,7 @@
     "terms" : "الشروط ",
     "and" : "و ",
     "conditions" : "الأحكام",
-    "needToAcceptTerms" : "يجب عليك قبول الشروط والأحكام"
+    "needToAcceptTerms" : "يجب عليك قبول الشروط والأحكام",
+    "chooseImage" : "اختر صورة للمنتج",
+    "clearImage" : "اضغط هنا لمسح الصورة"
 }

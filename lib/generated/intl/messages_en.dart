@@ -42,6 +42,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "changePhoneNo": MessageLookupByLibrary.simpleMessage(
       "Change Phone Number",
     ),
+    "chooseImage": MessageLookupByLibrary.simpleMessage(
+      "Choose product\'s image",
+    ),
+    "clearImage": MessageLookupByLibrary.simpleMessage(
+      "Press here to clear the image",
+    ),
     "companyName": MessageLookupByLibrary.simpleMessage("Company Name"),
     "companyOfProduct": MessageLookupByLibrary.simpleMessage(
       "Company of the Product",

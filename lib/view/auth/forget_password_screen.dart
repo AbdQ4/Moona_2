@@ -46,7 +46,7 @@ class ForgetPasswordScreen extends StatelessWidget {
             ),
             SizedBox(height: 10.h),
             Text(
-              "Enter your email to receive a verification Link.",
+              "Enter your email to receive a Tokken",
               style: GoogleFonts.inter(fontSize: 14.sp),
             ),
             SizedBox(height: 30.h),
@@ -61,7 +61,7 @@ class ForgetPasswordScreen extends StatelessWidget {
 
             Center(
               child: CustomElevatedButton(
-                title: "Send Link",
+                title: "Send Tokken",
                 onTap: () async {
                   if (_emailController.text.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -70,12 +70,23 @@ class ForgetPasswordScreen extends StatelessWidget {
                     return;
                   }
                   try {
-                    await Supabase.instance.client.auth.resetPasswordForEmail(
-                      _emailController.text.toLowerCase().trim(),
-                      redirectTo: 'https://moona-2.vercel.app/update-password',
+                    await Supabase.instance.client.auth.signInWithOtp(
+                      email: _emailController.text.toLowerCase().trim(),
+                    );
+                    Navigator.pushNamed(
+                      context,
+                      UpdatePassword.routeName,
+                      arguments: _emailController.text,
                     );
                   } catch (e) {
                     debugPrint("Error sending link: $e");
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "Error sending the tokken, Please try again later",
+                        ),
+                      ),
+                    );
                   }
                 },
               ),

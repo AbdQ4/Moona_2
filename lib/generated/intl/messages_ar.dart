@@ -38,6 +38,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "cement": MessageLookupByLibrary.simpleMessage("اسمنت"),
     "changeName": MessageLookupByLibrary.simpleMessage("تغيير الاسم"),
     "changePhoneNo": MessageLookupByLibrary.simpleMessage("تغيير رقم الهاتف"),
+    "chooseImage": MessageLookupByLibrary.simpleMessage("اختر صورة للمنتج"),
+    "clearImage": MessageLookupByLibrary.simpleMessage("اضغط هنا لمسح الصورة"),
     "companyName": MessageLookupByLibrary.simpleMessage("اسم الشركة"),
     "companyOfProduct": MessageLookupByLibrary.simpleMessage("شركة المنتج"),
     "conditions": MessageLookupByLibrary.simpleMessage("الأحكام"),

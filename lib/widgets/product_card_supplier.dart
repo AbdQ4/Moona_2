@@ -48,9 +48,9 @@ class ProductCardSupplier extends StatelessWidget {
               topLeft: Radius.circular(14.r),
               topRight: Radius.circular(14.r),
             ),
-            child: Image.asset(
+            child: Image.network(
               imageAddress,
-              height: 100,
+              height: 120.h,
               width: double.infinity,
               fit: BoxFit.cover,
             ),

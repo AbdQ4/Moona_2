@@ -105,6 +105,8 @@
     "terms" : "Terms ",
     "and" : "and ",
     "conditions" : "Conditions",
-    "needToAcceptTerms" : "You need to accept our terms and conditions"
+    "needToAcceptTerms" : "You need to accept our terms and conditions",
+    "chooseImage" : "Choose product's image",
+    "clearImage" : "Press here to clear the image"
 
 }

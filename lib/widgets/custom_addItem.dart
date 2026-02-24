@@ -3,13 +3,16 @@
 // ignore_for_file: deprecated_member_use, file_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:moona/controller/addItem_controller.dart';
-import 'package:moona/controller/lang_controller.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
 import 'package:moona/generated/l10n.dart';
+import 'package:moona/widgets/custom_image_pickers.dart';
 import 'package:provider/provider.dart';
 
 class CustomAdditem extends StatefulWidget {
@@ -33,11 +36,124 @@ class _CustomAdditemState extends State<CustomAdditem> {
 
   String? selectedSubType;
 
+  final MapController _mapController = MapController();
+
+  double? selectedLat;
+  double? selectedLng;
+  double currentZoom = 13;
+
+  Widget _buildMap() {
+    return Stack(
+      children: [
+        FlutterMap(
+          mapController: _mapController,
+          options: MapOptions(
+            initialCenter: LatLng(25.2048, 55.2708),
+            initialZoom: currentZoom,
+            onTap: (tapPosition, point) {
+              setState(() {
+                selectedLat = point.latitude;
+                selectedLng = point.longitude;
+              });
+
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text("Location Selected ✅")));
+            },
+            onPositionChanged: (position, hasGesture) {
+              currentZoom = position.zoom ?? currentZoom;
+            },
+          ),
+          children: [
+            TileLayer(
+              urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+              userAgentPackageName: 'com.moona.app',
+            ),
+
+            if (selectedLat != null && selectedLng != null)
+              MarkerLayer(
+                markers: [
+                  Marker(
+                    point: LatLng(selectedLat!, selectedLng!),
+                    width: 40.w,
+                    height: 40.h,
+                    child: Icon(
+                      Icons.location_pin,
+                      size: 40.sp,
+                      color: Colors.red,
+                    ),
+                  ),
+                ],
+              ),
+          ],
+        ),
+
+        /// 📍 Get User Location Button
+        Positioned(
+          right: 16.w,
+          bottom: 100.h,
+          child: FloatingActionButton(
+            mini: true,
+            onPressed: _getUserLocation,
+            child: Icon(Icons.my_location),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _getUserLocation() async {
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Location services are disabled ❌")),
+        );
+        return;
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Location permission denied ❌")),
+          );
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Permission permanently denied ❌")),
+        );
+        return;
+      }
+
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      setState(() {
+        selectedLat = position.latitude;
+        selectedLng = position.longitude;
+      });
+
+      _mapController.move(LatLng(position.latitude, position.longitude), 16);
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Current location loaded ✅")));
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Failed to get location ❌")));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeController = Provider.of<ThemeController>(context);
-    final langController = Provider.of<LangController>(context);
-    final currentLang = langController.locale;
     final size = MediaQuery.of(context).size;
     final height = size.height; // screen height
     // ignore: unused_local_variable
@@ -81,7 +197,7 @@ class _CustomAdditemState extends State<CustomAdditem> {
         decoration: BoxDecoration(
           color: themeController.isLight
               ? ColorsManager.white
-              : ColorsManager.green, // Dark green background
+              : ColorsManager.green,
           borderRadius: BorderRadius.circular(20.r),
           border: Border.all(
             color: themeController.isLight
@@ -95,6 +211,19 @@ class _CustomAdditemState extends State<CustomAdditem> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Align(
+                alignment: AlignmentGeometry.centerLeft,
+                child: Text(
+                  S.of(context).chooseImage,
+                  style: GoogleFonts.inter(
+                    color: themeController.isLight
+                        ? ColorsManager.green
+                        : ColorsManager.gold,
+                    fontSize: 16.sp,
+                  ),
+                ),
+              ),
+              CustomImagePickers(),
               Padding(
                 padding: REdgeInsets.symmetric(vertical: 8),
                 child: Align(
@@ -247,6 +376,58 @@ class _CustomAdditemState extends State<CustomAdditem> {
                 ],
               ),
 
+              SizedBox(height: 15.h),
+
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: themeController.isLight
+                      ? ColorsManager.white
+                      : ColorsManager.green,
+                  foregroundColor: themeController.isLight
+                      ? ColorsManager.green
+                      : ColorsManager.gold,
+                  fixedSize: Size(340.w, 60.h),
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: themeController.isLight
+                          ? ColorsManager.green
+                          : ColorsManager.gold,
+                    ),
+                    borderRadius: BorderRadius.circular(16.r),
+                  ),
+                ),
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (_) {
+                      return SizedBox(
+                        height: 500.h, // ✅ using ScreenUtil
+                        child: _buildMap(),
+                      );
+                    },
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Icon(
+                      Icons.location_on,
+                      color: themeController.isLight
+                          ? ColorsManager.green
+                          : ColorsManager.gold,
+                      size: 24.sp,
+                    ),
+                    Text(
+                      "Choose your location",
+                      style: GoogleFonts.inter(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               SizedBox(height: 15.h),
 
               Row(
@@ -497,6 +678,13 @@ class _CustomAdditemState extends State<CustomAdditem> {
                       return;
                     }
 
+                    if (selectedLat == null || selectedLng == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Please choose a location")),
+                      );
+                      return;
+                    }
+
                     final stock = double.tryParse(stockController.text) ?? 0;
                     final price = double.tryParse(priceController.text) ?? 0;
                     final company = companyController.text.trim();
@@ -511,6 +699,9 @@ class _CustomAdditemState extends State<CustomAdditem> {
                       isDelivery: provider.isDelivery,
                       isCredit: provider.isCredit,
                       name: selectedSubType!,
+                      imageFile: provider.image,
+                      lat: selectedLat!,
+                      lng: selectedLng!,
                     );
                     if (newProduct != null) {
                       provider.products.add(newProduct);
