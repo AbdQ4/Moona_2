@@ -52,6 +52,61 @@ PODS:
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - Stripe (25.0.1):
+    - StripeApplePay (= 25.0.1)
+    - StripeCore (= 25.0.1)
+    - StripePayments (= 25.0.1)
+    - StripePaymentsUI (= 25.0.1)
+    - StripeUICore (= 25.0.1)
+  - stripe_ios (0.0.1):
+    - Flutter
+    - Stripe (~> 25.0.1)
+    - stripe_ios/stripe_ios (= 0.0.1)
+    - stripe_ios/stripe_objc (= 0.0.1)
+    - StripeApplePay (~> 25.0.1)
+    - StripeFinancialConnections (~> 25.0.1)
+    - StripePayments (~> 25.0.1)
+    - StripePaymentSheet (~> 25.0.1)
+    - StripePaymentsUI (~> 25.0.1)
+  - stripe_ios/stripe_ios (0.0.1):
+    - Flutter
+    - Stripe (~> 25.0.1)
+    - stripe_ios/stripe_objc
+    - StripeApplePay (~> 25.0.1)
+    - StripeFinancialConnections (~> 25.0.1)
+    - StripePayments (~> 25.0.1)
+    - StripePaymentSheet (~> 25.0.1)
+    - StripePaymentsUI (~> 25.0.1)
+  - stripe_ios/stripe_objc (0.0.1):
+    - Flutter
+    - Stripe (~> 25.0.1)
+    - StripeApplePay (~> 25.0.1)
+    - StripeFinancialConnections (~> 25.0.1)
+    - StripePayments (~> 25.0.1)
+    - StripePaymentSheet (~> 25.0.1)
+    - StripePaymentsUI (~> 25.0.1)
+  - StripeApplePay (25.0.1):
+    - StripeCore (= 25.0.1)
+  - StripeCore (25.0.1)
+  - StripeFinancialConnections (25.0.1):
+    - StripeCore (= 25.0.1)
+    - StripeUICore (= 25.0.1)
+  - StripePayments (25.0.1):
+    - StripeCore (= 25.0.1)
+    - StripePayments/Stripe3DS2 (= 25.0.1)
+  - StripePayments/Stripe3DS2 (25.0.1):
+    - StripeCore (= 25.0.1)
+  - StripePaymentSheet (25.0.1):
+    - StripeApplePay (= 25.0.1)
+    - StripeCore (= 25.0.1)
+    - StripePayments (= 25.0.1)
+    - StripePaymentsUI (= 25.0.1)
+  - StripePaymentsUI (25.0.1):
+    - StripeCore (= 25.0.1)
+    - StripePayments (= 25.0.1)
+    - StripeUICore (= 25.0.1)
+  - StripeUICore (25.0.1):
+    - StripeCore (= 25.0.1)
   - SwiftyGif (5.4.5)
   - syncfusion_flutter_pdfviewer (0.0.1):
     - Flutter
@@ -67,6 +122,7 @@ DEPENDENCIES:
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - stripe_ios (from `.symlinks/plugins/stripe_ios/ios`)
   - syncfusion_flutter_pdfviewer (from `.symlinks/plugins/syncfusion_flutter_pdfviewer/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
@@ -75,6 +131,14 @@ SPEC REPOS:
     - DKImagePickerController
     - DKPhotoGallery
     - SDWebImage
+    - Stripe
+    - StripeApplePay
+    - StripeCore
+    - StripeFinancialConnections
+    - StripePayments
+    - StripePaymentSheet
+    - StripePaymentsUI
+    - StripeUICore
     - SwiftyGif
 
 EXTERNAL SOURCES:
@@ -94,6 +158,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
+  stripe_ios:
+    :path: ".symlinks/plugins/stripe_ios/ios"
   syncfusion_flutter_pdfviewer:
     :path: ".symlinks/plugins/syncfusion_flutter_pdfviewer/ios"
   url_launcher_ios:
@@ -111,10 +177,19 @@ SPEC CHECKSUMS:
   path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
   SDWebImage: 9f177d83116802728e122410fb25ad88f5c7608a
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
+  Stripe: 4728e3e0dd8df134e4a420ab504e929a93a815f0
+  stripe_ios: b6b8ef64e89a5409da466b4e6a2a6a26178892a6
+  StripeApplePay: 43997281ace138a1c75a8f2d7be11925ea28644c
+  StripeCore: 457c30e2fd3a7c4b274a5ad53d1ff03661eef2a0
+  StripeFinancialConnections: 8c2e326f767fb014b53174b3a5f8592c0a45fa56
+  StripePayments: 6955de4298a5265e66f02cffcc7954475ac7f6c8
+  StripePaymentSheet: 3f93ce6ea84afde770d3c7e18a9b8f99aed63896
+  StripePaymentsUI: 626726a01255a6458c35436f7f6431dacee82684
+  StripeUICore: 30f8352fd7a5cf1541b7777a57b3ad1133bf6763
   SwiftyGif: 706c60cf65fa2bc5ee0313beece843c8eb8194d4
   syncfusion_flutter_pdfviewer: 90dc48305d2e33d4aa20681d1e98ddeda891bc14
   url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b
 
-PODFILE CHECKSUM: 3c63482e143d1b91d2d2560aee9fb04ecc74ac7e
+PODFILE CHECKSUM: 251cb053df7158f337c0712f2ab29f4e0fa474ce
 
 COCOAPODS: 1.16.2

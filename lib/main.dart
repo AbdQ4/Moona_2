@@ -18,14 +18,10 @@ import 'package:moona/view/auth/update_password.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-String publishable_key =
-    "pk_test_51Sxsb5I7gTKKDGgsML2Z3luBUWrh9h8U4DVyCoZkddGeYW6cbhH4BKR7QIdTlN0zgvNRj3DGtJ8IbXwadbgPzp8q005Low5Xy7";
-
-String secret_key =
-    "sk_test_51Sxsb5I7gTKKDGgsSx8LF3uFyFQDX0W30jcsza1iUhE2FuOjFwQNAG8jmJNg0MilHvi41PENbOOez0N186ugVoRI00uLhBrNQt";
 void main() async {
-  Stripe.publishableKey = publishable_key;
-  Stripe.instance.applySettings();
+  // Stripe.publishableKey =
+  //     "pk_test_51Sxsb5I7gTKKDGgsML2Z3luBUWrh9h8U4DVyCoZkddGeYW6cbhH4BKR7QIdTlN0zgvNRj3DGtJ8IbXwadbgPzp8q005Low5Xy7";
+  // await Stripe.instance.applySettings();
 
   WidgetsFlutterBinding.ensureInitialized();
 
