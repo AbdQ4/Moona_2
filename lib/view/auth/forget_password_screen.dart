@@ -5,6 +5,7 @@ import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/controller/user_controller.dart';
 import 'package:moona/core/assets_manager.dart';
 import 'package:moona/core/colors_manager.dart';
+import 'package:moona/view/auth/update_password.dart';
 import 'package:moona/widgets/custom_elevated_button.dart';
 import 'package:moona/widgets/custom_text_form_field.dart';
 import 'package:provider/provider.dart';
