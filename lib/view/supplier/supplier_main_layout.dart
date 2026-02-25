@@ -18,9 +18,9 @@ class _SupplierMainLayoutState extends State<SupplierMainLayout> {
   int _selectedIndex = 0;
 
   final List<Widget> _screens = [
-    HomePage(),
+    SupplierHomePage(),
     FinancePage(),
-    LicencePage(),
+    SupplierLicencePage(),
     ProfilePage(),
   ];
 
@@ -32,6 +32,9 @@ class _SupplierMainLayoutState extends State<SupplierMainLayout> {
 
   @override
   Widget build(BuildContext context) {
+    /// This is the main layout of the main four screens
+    /// (Home screen, Finance screen, License screen, Profile screen)
+
     return Scaffold(
       body: _screens[_selectedIndex],
       bottomNavigationBar: CustomNavbar(

@@ -272,7 +272,10 @@ class YourCartPage extends StatelessWidget {
                                               8,
                                             ),
                                           ),
-                                          foregroundColor: ColorsManager.white,
+                                          foregroundColor:
+                                              themeController.isLight
+                                              ? ColorsManager.white
+                                              : ColorsManager.green,
                                         ),
                                         onPressed: () {
                                           cartProvider.setMaxQuantity(item);

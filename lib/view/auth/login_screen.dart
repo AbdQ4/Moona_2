@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/assets_manager.dart';
 import 'package:moona/core/colors_manager.dart';
 import 'package:moona/core/text_style.dart';
+import 'package:moona/generated/l10n.dart';
 import 'package:moona/view/auth/forget_password_screen.dart';
 import 'package:moona/view/auth/signup_screen.dart';
 import 'package:moona/widgets/custom_elevated_button.dart';
@@ -57,8 +59,8 @@ class _LoginScreenState extends State<LoginScreen> {
               ? ColorsManager.green
               : ColorsManager.white,
           content: Text(
-            "Invalid email or password",
-            style: safeInter(
+            S.of(context).invalidEmailOrPassword,
+            style: GoogleFonts.inter(
               color: themeController.isLight
                   ? ColorsManager.white
                   : ColorsManager.green,
@@ -82,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 Center(
                   child: Text(
-                    "Sign In",
+                    S.of(context).signIn,
                     style: safeInter(
                       color: themeController.isLight
                           ? ColorsManager.green
@@ -94,12 +96,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 150.h),
                 CustomTextFormField(
-                  label: "E-mail",
+                  label: S.of(context).email,
                   prefixIconPath: AssetsManager.emailIcon,
                   controller: _emailController,
                 ),
                 PasswordTextField(
-                  label: "Password",
+                  label: S.of(context).password,
                   controller: _passwordController,
                 ),
                 SizedBox(height: 15.h),
@@ -107,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     CustomTextButton(
-                      title: "Forget password?",
+                      title: S.of(context).forgetPassword,
                       onTap: () {
                         Navigator.pushNamed(
                           context,
@@ -119,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 15.h),
                 CustomElevatedButton(
-                  title: "Sign In",
+                  title: S.of(context).signIn,
                   onTap: () {
                     _login();
                   },
@@ -132,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       onTap: () {
                         Navigator.pushNamed(context, SignupScreen.routeName);
                       },
-                      title: "Don't have an account?",
+                      title: S.of(context).dontHaveAnAccount,
                     ),
                   ],
                 ),

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:moona/controller/addItem_controller.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
+import 'package:moona/generated/l10n.dart';
 import 'package:moona/widgets/product_card_contractor.dart';
 import 'package:provider/provider.dart';
 
@@ -50,12 +51,14 @@ class ContractorCategoryPage extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             }
             if (snapshot.hasError) {
-              return Center(child: Text("Error: ${snapshot.error}"));
+              return Center(
+                child: Text("${S.of(context).error}: ${snapshot.error}"),
+              );
             }
             if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return Center(
                 child: Text(
-                  "No items yet in $categoryName",
+                  "${S.of(context).noItems} $categoryName",
                   style: TextStyle(
                     color: themeController.isLight
                         ? ColorsManager.black

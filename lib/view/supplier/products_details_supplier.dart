@@ -3,7 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moona/controller/addItem_controller.dart';
 import 'package:moona/controller/theme_controller.dart';
+import 'package:moona/core/assets_manager.dart';
 import 'package:moona/core/colors_manager.dart';
+import 'package:moona/generated/l10n.dart';
+import 'package:moona/widgets/custom_image_pickers.dart';
 import 'package:provider/provider.dart';
 
 class ProductsDetailsSupplier extends StatefulWidget {
@@ -90,24 +93,8 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                 // Product Image
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12.r),
-                  child: Image.asset(
-                    product['name'] == 'cement'
-                        ? 'assets/images/cement.jpg'
-                        : product['name'].toString().toLowerCase() == 'steel'
-                        ? 'assets/images/steel.jpg'
-                        : product['name'].toString().toLowerCase() == 'bricks'
-                        ? 'assets/images/brick.jpg'
-                        : product['name'].toString().toLowerCase() == 'sand'
-                        ? 'assets/images/sand.jpg'
-                        : product['name'].toString().toLowerCase() == 'gravel'
-                        ? 'assets/images/gravel.jpg'
-                        : product['name'].toString().toLowerCase() == 'bulbs'
-                        ? 'assets/images/bulbs.jpg'
-                        : product['name'].toString().toLowerCase() == 'paint'
-                        ? 'assets/images/paints.jpg'
-                        : product['name'].toString().toLowerCase() == 'wires'
-                        ? 'assets/images/wires.jpg'
-                        : 'assets/images/default.jpg',
+                  child: Image.network(
+                    product['image_url'],
                     height: 200.h,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -179,7 +166,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                     Row(
                       children: [
                         Text(
-                          "In Stock :",
+                          "${S.of(context).stock} :",
                           style: TextStyle(
                             color: themeController.isLight
                                 ? ColorsManager.green
@@ -204,7 +191,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                 SizedBox(height: 8.h),
                 // Description
                 Text(
-                  "Description",
+                  S.of(context).description,
                   style: TextStyle(
                     color: themeController.isLight
                         ? ColorsManager.green
@@ -244,7 +231,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                     Row(
                       children: [
                         Text(
-                          "Delivery ",
+                          "${S.of(context).delivery} :",
                           style: TextStyle(
                             color: themeController.isLight
                                 ? ColorsManager.green
@@ -264,7 +251,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                     Row(
                       children: [
                         Text(
-                          "Sell on Credit ",
+                          "${S.of(context).sellOnCredit} :",
                           style: TextStyle(
                             color: themeController.isLight
                                 ? ColorsManager.green
@@ -332,9 +319,11 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                                 child: SingleChildScrollView(
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "Edit Product - ${product['company']}",
+                                        "${S.of(context).editProduct} - ${product['company']}",
                                         style: TextStyle(
                                           color: themeController.isLight
                                               ? ColorsManager.green
@@ -344,6 +333,17 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                                         ),
                                       ),
                                       SizedBox(height: 16.h),
+                                      Text(
+                                        S.of(context).chooseImage,
+                                        style: GoogleFonts.inter(
+                                          color: themeController.isLight
+                                              ? ColorsManager.green
+                                              : ColorsManager.gold,
+                                          fontSize: 16.sp,
+                                        ),
+                                      ),
+                                      CustomImagePickers(),
+                                      SizedBox(height: 10.h),
                                       TextFormField(
                                         style: GoogleFonts.inter(
                                           color: themeController.isLight
@@ -357,7 +357,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                                                 ? ColorsManager.green
                                                 : ColorsManager.white,
                                           ),
-                                          labelText: "Product Name",
+                                          labelText: S.of(context).productName,
                                           border: OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(
                                               8.r,
@@ -404,7 +404,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                                                 ? ColorsManager.green
                                                 : ColorsManager.white,
                                           ),
-                                          labelText: "Product Price",
+                                          labelText: S.of(context).pricePerTon,
                                           border: OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(
                                               8.r,
@@ -453,7 +453,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                                                 ? ColorsManager.green
                                                 : ColorsManager.white,
                                           ),
-                                          labelText: "Product Description",
+                                          labelText: S.of(context).description,
                                           border: OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(
                                               8.r,
@@ -500,7 +500,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                                                 ? ColorsManager.green
                                                 : ColorsManager.white,
                                           ),
-                                          labelText: "Product Stock",
+                                          labelText: S.of(context).stock,
                                           border: OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(
                                               8.r,
@@ -540,7 +540,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            "Delivery?",
+                                            "${S.of(context).delivery}?",
                                             style: TextStyle(
                                               color: themeController.isLight
                                                   ? ColorsManager.green
@@ -568,7 +568,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            "Credit?",
+                                            "${S.of(context).sellOnCredit}?",
                                             style: TextStyle(
                                               color: themeController.isLight
                                                   ? ColorsManager.green
@@ -621,7 +621,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                                                   ? ColorsManager.white
                                                   : ColorsManager.green,
                                               title: Text(
-                                                "Confirm",
+                                                S.of(context).confirm,
                                                 style: GoogleFonts.inter(
                                                   color: themeController.isLight
                                                       ? ColorsManager.green
@@ -629,7 +629,9 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                                                 ),
                                               ),
                                               content: Text(
-                                                "Update this product with the new details?",
+                                                S
+                                                    .of(context)
+                                                    .updateConfirmation,
                                                 style: GoogleFonts.inter(
                                                   color: themeController.isLight
                                                       ? ColorsManager.green
@@ -642,7 +644,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                                                   onPressed: () =>
                                                       Navigator.pop(ctx, false),
                                                   child: Text(
-                                                    "No",
+                                                    S.of(context).no,
                                                     style: GoogleFonts.inter(
                                                       color:
                                                           themeController
@@ -676,7 +678,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                                                     setState(() {});
                                                   },
                                                   child: Text(
-                                                    "Yes",
+                                                    S.of(context).yes,
                                                     style: GoogleFonts.inter(
                                                       color: ColorsManager.red,
                                                       fontWeight:
@@ -694,7 +696,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                                             ).showSnackBar(
                                               SnackBar(
                                                 content: Text(
-                                                  "Product updated successfully",
+                                                  S.of(context).productUpdated,
                                                   style: GoogleFonts.inter(
                                                     color:
                                                         themeController.isLight
@@ -714,7 +716,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                                             ).showSnackBar(
                                               SnackBar(
                                                 content: Text(
-                                                  "Product update cancelled",
+                                                  S.of(context).productDeleted,
                                                   style: GoogleFonts.inter(
                                                     color:
                                                         themeController.isLight
@@ -730,7 +732,15 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                                             );
                                           }
                                         },
-                                        child: const Text("Update Product"),
+                                        child: Text(
+                                          S.of(context).updateProduct,
+                                          style: GoogleFonts.inter(
+                                            color: themeController.isLight
+                                                ? ColorsManager.white
+                                                : ColorsManager.green,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ),
                                       SizedBox(height: 40.h),
                                     ],
@@ -743,7 +753,15 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                       },
                     );
                   },
-                  child: const Text("Edit Product"),
+                  child: Text(
+                    S.of(context).editProduct,
+                    style: GoogleFonts.inter(
+                      color: themeController.isLight
+                          ? ColorsManager.white
+                          : ColorsManager.green,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
                 SizedBox(height: 12.h),
                 ElevatedButton(
@@ -763,7 +781,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                             ? ColorsManager.white
                             : ColorsManager.green,
                         title: Text(
-                          "Confirm",
+                          S.of(context).confirm,
                           style: GoogleFonts.inter(
                             color: themeController.isLight
                                 ? ColorsManager.green
@@ -771,7 +789,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                           ),
                         ),
                         content: Text(
-                          "Delete this product? This action cannot be undone.",
+                          S.of(context).deleteProductConfirmation,
                           style: GoogleFonts.inter(
                             color: themeController.isLight
                                 ? ColorsManager.green
@@ -783,7 +801,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                           TextButton(
                             onPressed: () => Navigator.pop(ctx, false),
                             child: Text(
-                              "No",
+                              S.of(context).no,
                               style: GoogleFonts.inter(
                                 color: themeController.isLight
                                     ? ColorsManager.green
@@ -795,7 +813,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                           TextButton(
                             onPressed: () => Navigator.pop(ctx, true),
                             child: Text(
-                              "Yes",
+                              S.of(context).yes,
                               style: GoogleFonts.inter(
                                 color: ColorsManager.red,
                                 fontWeight: FontWeight.bold,
@@ -815,7 +833,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            "Product deleted",
+                            S.of(context).productDeleted,
                             style: GoogleFonts.inter(
                               color: themeController.isLight
                                   ? ColorsManager.white
@@ -832,7 +850,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            "Delete failed — check logs",
+                            S.of(context).deleteFailed,
                             style: GoogleFonts.inter(
                               color: themeController.isLight
                                   ? ColorsManager.white
@@ -847,7 +865,13 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                     }
                     setState(() {});
                   },
-                  child: const Text("Delete Product"),
+                  child: Text(
+                    S.of(context).deleteProduct,
+                    style: GoogleFonts.inter(
+                      color: ColorsManager.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ],
             );

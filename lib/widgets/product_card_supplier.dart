@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
+import 'package:moona/generated/l10n.dart';
 import 'package:moona/view/supplier/products_details_supplier.dart';
 import 'package:provider/provider.dart';
 
@@ -47,9 +48,9 @@ class ProductCardSupplier extends StatelessWidget {
               topLeft: Radius.circular(14.r),
               topRight: Radius.circular(14.r),
             ),
-            child: Image.asset(
+            child: Image.network(
               imageAddress,
-              height: 100,
+              height: 120.h,
               width: double.infinity,
               fit: BoxFit.cover,
             ),
@@ -146,8 +147,8 @@ class ProductCardSupplier extends StatelessWidget {
                         arguments: currentProduct,
                       );
                     },
-                    child: const Text(
-                      "More Details",
+                    child: Text(
+                      S.of(context).moreDetails,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),

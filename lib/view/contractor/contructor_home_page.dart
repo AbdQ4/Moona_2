@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:moona/controller/theme_controller.dart';
+import 'package:moona/core/assets_manager.dart';
 import 'package:moona/core/colors_manager.dart';
+import 'package:moona/generated/l10n.dart';
 import 'package:moona/view/contractor/contractor_category_page.dart';
 import 'package:moona/view/contractor/your_cart_page.dart';
 import 'package:provider/provider.dart';
@@ -19,40 +21,55 @@ class _ContructorHomePageState extends State<ContructorHomePage> {
     final themeController = Provider.of<ThemeController>(context);
 
     final List<Map<String, String>> categories = [
-      {"title": "Building Materials", "image": "assets/images/1.jpg"},
-      {"title": "Electrical & Lighting", "image": "assets/images/2.jpg"},
-      {"title": "Finishing Materials", "image": "assets/images/3.jpg"},
-      {"title": "Plumbing", "image": "assets/images/4.jpg"},
-      {"title": "Construction Tools", "image": "assets/images/5.jpg"},
+      {
+        "title": S.of(context).buildingMaterials,
+        "image": AssetsManager.buildingMaterials,
+      },
+      {
+        "title": S.of(context).electricalAndLightning,
+        "image": AssetsManager.electricalAndLightning,
+      },
+      {
+        "title": S.of(context).finishingMaterilas,
+        "image": AssetsManager.finishingMaterials,
+      },
+      {
+        "title": S.of(context).plumbing,
+        "image": AssetsManager.plumbingMaterials,
+      },
+      {
+        "title": S.of(context).constructionTools,
+        "image": AssetsManager.constructionMaterials,
+      },
     ];
 
     final Map<String, List<Map<String, String>>> categoryItems = {
-      "Building Materials": [
-        {"name": "Bricks", "image": "assets/images/brick.jpg"},
-        {"name": "Cement", "image": "assets/images/cement.jpg"},
-        {"name": "Sand", "image": "assets/images/sand.jpg"},
-        {"name": "Steel", "image": "assets/images/steel.jpg"},
+      S.of(context).buildingMaterials: [
+        {"name": S.of(context).bricks},
+        {"name": S.of(context).cement},
+        {"name": S.of(context).sand},
+        {"name": S.of(context).steel},
       ],
-      "Electrical & Lighting": [
-        {"name": "Wires", "image": "assets/images/wires.jpg"},
-        {"name": "Switches", "image": "assets/images/switches.jpg"},
-        {"name": "Bulbs", "image": "assets/images/bulbs.jpg"},
-        {"name": "Panels", "image": "assets/images/panels.jpg"},
+      S.of(context).electricalAndLightning: [
+        {"name": S.of(context).wires},
+        {"name": S.of(context).switches},
+        {"name": S.of(context).bulbs},
+        {"name": S.of(context).panels},
       ],
-      "Finishing Materials": [
-        {"name": "Paint", "image": "assets/images/paint.png"},
-        {"name": "Tiles", "image": "assets/images/tiles.png"},
-        {"name": "Wallpaper", "image": "assets/images/wallpaper.png"},
+      S.of(context).finishingMaterilas: [
+        {"name": S.of(context).paints},
+        {"name": S.of(context).tiles},
+        {"name": S.of(context).wallpaper},
       ],
-      "Plumbing": [
-        {"name": "Pipes", "image": "assets/images/pipes.png"},
-        {"name": "Taps", "image": "assets/images/tap.png"},
-        {"name": "Valves", "image": "assets/images/valve.png"},
+      S.of(context).plumbing: [
+        {"name": S.of(context).pipes},
+        {"name": S.of(context).taps},
+        {"name": S.of(context).valves},
       ],
-      "Construction Tools": [
-        {"name": "Hammer", "image": "assets/images/hammer.png"},
-        {"name": "Drill", "image": "assets/images/drill.png"},
-        {"name": "Saw", "image": "assets/images/saw.png"},
+      S.of(context).constructionTools: [
+        {"name": S.of(context).hummer},
+        {"name": S.of(context).drill},
+        {"name": S.of(context).saw},
       ],
     };
 

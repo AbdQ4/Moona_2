@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:moona/controller/lang_controller.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/routes_manager.dart';
 import 'package:moona/core/theme_manager.dart';
+import 'package:moona/generated/l10n.dart';
 import 'package:moona/view/auth/auth_redirect.dart';
 import 'package:provider/provider.dart';
 
@@ -13,6 +16,7 @@ class Moona extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeController = Provider.of<ThemeController>(context);
+    final langController = Provider.of<LangController>(context);
     return ScreenUtilInit(
       designSize: Size(390, 844),
       builder: (context, child) => MaterialApp(
@@ -23,8 +27,15 @@ class Moona extends StatelessWidget {
         theme: ThemeManager.lightTheme,
         darkTheme: ThemeManager.darkTheme,
         themeMode: themeController.isLight ? ThemeMode.light : ThemeMode.dark,
+        locale: langController.locale,
+        localizationsDelegates: [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: S.delegate.supportedLocales,
       ),
     );
   }
 }
-

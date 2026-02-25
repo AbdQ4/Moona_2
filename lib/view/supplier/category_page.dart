@@ -3,34 +3,37 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moona/controller/addItem_controller.dart';
 import 'package:moona/controller/theme_controller.dart';
+import 'package:moona/core/assets_manager.dart';
 import 'package:moona/core/colors_manager.dart';
-import 'package:moona/widgets/product_card.dart';
+import 'package:moona/generated/l10n.dart';
+import 'package:moona/widgets/product_card_supplier.dart';
 import 'package:provider/provider.dart';
 
-class CategoryPage extends StatelessWidget {
-  final String categoryName;
-  const CategoryPage({super.key, required this.categoryName});
-  static const String routeName = "/category_page";
+class CategoryPage extends StatefulWidget {
+  final String categoryKey; // used for filtering
+  final String categoryTitle; // used for UI
 
+  const CategoryPage({
+    super.key,
+    required this.categoryKey,
+    required this.categoryTitle,
+  });
+
+  @override
+  State<CategoryPage> createState() => _CategoryPageState();
+}
+
+class _CategoryPageState extends State<CategoryPage> {
   @override
   Widget build(BuildContext context) {
     final themeController = Provider.of<ThemeController>(context);
-
-    final addItemProvider = Provider.of<AdditemProvider>(
-      context,
-      listen: false,
-    );
+    final addItemProvider = Provider.of<AdditemProvider>(context, listen: true);
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorsManager.green,
-        leading: BackButton(
-          color: themeController.isLight
-              ? ColorsManager.white
-              : ColorsManager.gold,
-        ),
         title: Text(
-          categoryName,
+          widget.categoryTitle,
           style: GoogleFonts.inter(
             color: themeController.isLight
                 ? ColorsManager.white
@@ -38,67 +41,48 @@ class CategoryPage extends StatelessWidget {
           ),
         ),
         centerTitle: true,
+        leading: BackButton(
+          color: themeController.isLight
+              ? ColorsManager.white
+              : ColorsManager.gold,
+        ),
       ),
       backgroundColor: themeController.isLight
           ? ColorsManager.white
           : ColorsManager.green,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
-        child: Consumer<AdditemProvider>(
-          builder: (context, provider, child) {
-            final categoryProducts = provider.products
-                .where(
-                  (p) =>
-                      p['type'].toString().toLowerCase() ==
-                      categoryName.toLowerCase(),
-                )
-                .toList();
+        child: StreamBuilder<List<Map<String, dynamic>>>(
+          stream: addItemProvider.streamProducts(widget.categoryKey),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-            if (categoryProducts.isEmpty) {
+            final filtered = snapshot.data!;
+
+            if (filtered.isEmpty) {
               return Center(
-                child: Text(
-                  "No items yet in $categoryName",
-                  style: TextStyle(
-                    color: themeController.isLight
-                        ? ColorsManager.black
-                        : ColorsManager.gold,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                child: Text("${S.of(context).noItems} ${widget.categoryTitle}"),
               );
             }
 
             return GridView.builder(
-              itemCount: categoryProducts.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              itemCount: filtered.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                childAspectRatio: 0.65,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                childAspectRatio: 0.61,
               ),
               itemBuilder: (context, index) {
-                final product = categoryProducts[index];
-                final productName = product['name'].toString().toLowerCase();
+                final product = filtered[index];
+                final imageUrl = product['image_url'] ?? '';
 
-                return ProductCard(
-                  imageAddress: productName == 'cement'
-                      ? 'assets/images/cement.jpg'
-                      : productName == 'steel'
-                      ? 'assets/images/steel.jpg'
-                      : productName == 'bricks'
-                      ? 'assets/images/brick.jpg'
-                      : productName == 'sand'
-                      ? 'assets/images/sand.jpg'
-                      : productName == 'gravel'
-                      ? 'assets/images/gravel.jpg'
-                      : productName == 'bulbs'
-                      ? 'assets/images/bulbs.jpg'
-                      : productName == 'paint'
-                      ? 'assets/images/paints.jpg'
-                      : productName == 'wires'
-                      ? 'assets/images/wires.jpg'
-                      : 'assets/images/default.jpg',
+                return ProductCardSupplier(
+                  imageAddress: imageUrl.isNotEmpty
+                      ? imageUrl
+                      : AssetsManager.defaultImage,
 
                   companyName: product['company'] ?? 'Unknown Company',
                   location: product['location'] ?? 'Unknown Location',

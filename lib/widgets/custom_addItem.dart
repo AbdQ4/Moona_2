@@ -3,10 +3,16 @@
 // ignore_for_file: deprecated_member_use, file_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:moona/controller/addItem_controller.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
+import 'package:moona/generated/l10n.dart';
+import 'package:moona/widgets/custom_image_pickers.dart';
 import 'package:provider/provider.dart';
 
 class CustomAdditem extends StatefulWidget {
@@ -30,6 +36,121 @@ class _CustomAdditemState extends State<CustomAdditem> {
 
   String? selectedSubType;
 
+  final MapController _mapController = MapController();
+
+  double? selectedLat;
+  double? selectedLng;
+  double currentZoom = 13;
+
+  Widget _buildMap() {
+    return Stack(
+      children: [
+        FlutterMap(
+          mapController: _mapController,
+          options: MapOptions(
+            initialCenter: LatLng(25.2048, 55.2708),
+            initialZoom: currentZoom,
+            onTap: (tapPosition, point) {
+              setState(() {
+                selectedLat = point.latitude;
+                selectedLng = point.longitude;
+              });
+
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text("Location Selected ✅")));
+            },
+            onPositionChanged: (position, hasGesture) {
+              currentZoom = position.zoom ?? currentZoom;
+            },
+          ),
+          children: [
+            TileLayer(
+              urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+              userAgentPackageName: 'com.moona.app',
+            ),
+
+            if (selectedLat != null && selectedLng != null)
+              MarkerLayer(
+                markers: [
+                  Marker(
+                    point: LatLng(selectedLat!, selectedLng!),
+                    width: 40.w,
+                    height: 40.h,
+                    child: Icon(
+                      Icons.location_pin,
+                      size: 40.sp,
+                      color: Colors.red,
+                    ),
+                  ),
+                ],
+              ),
+          ],
+        ),
+
+        /// 📍 Get User Location Button
+        Positioned(
+          right: 16.w,
+          bottom: 100.h,
+          child: FloatingActionButton(
+            mini: true,
+            onPressed: _getUserLocation,
+            child: Icon(Icons.my_location),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _getUserLocation() async {
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Location services are disabled ❌")),
+        );
+        return;
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Location permission denied ❌")),
+          );
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Permission permanently denied ❌")),
+        );
+        return;
+      }
+
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      setState(() {
+        selectedLat = position.latitude;
+        selectedLng = position.longitude;
+      });
+
+      _mapController.move(LatLng(position.latitude, position.longitude), 16);
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Current location loaded ✅")));
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Failed to get location ❌")));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeController = Provider.of<ThemeController>(context);
@@ -39,11 +160,34 @@ class _CustomAdditemState extends State<CustomAdditem> {
     final width = size.width; // screen width
 
     final Map<String, List<String>> categories = {
-      "Building Materials": ["Bricks", "Cement", "Sand", "Steel"],
-      "Electrical & Lighting": ["Wires", "Switches", "Bulbs", "Panels"],
-      "Finishing Materials": ["Paint", "Tiles", "Wallpaper"],
-      "Plumbing": ["Pipes", "Taps", "Valves"],
-      "Construction Tools": ["Hammer", "Drill", "Saw"],
+      S.of(context).buildingMaterials: [
+        S.of(context).bricks,
+        S.of(context).cement,
+        S.of(context).sand,
+        S.of(context).steel,
+      ],
+
+      S.of(context).electricalAndLightning: [
+        S.of(context).wires,
+        S.of(context).switches,
+        S.of(context).bulbs,
+        S.of(context).panels,
+      ],
+      S.of(context).finishingMaterilas: [
+        S.of(context).paints,
+        S.of(context).tiles,
+        S.of(context).wallpaper,
+      ],
+      S.of(context).plumbing: [
+        S.of(context).pipes,
+        S.of(context).taps,
+        S.of(context).valves,
+      ],
+      S.of(context).constructionTools: [
+        S.of(context).hummer,
+        S.of(context).drill,
+        S.of(context).saw,
+      ],
     };
 
     return Consumer<AdditemProvider>(
@@ -53,7 +197,7 @@ class _CustomAdditemState extends State<CustomAdditem> {
         decoration: BoxDecoration(
           color: themeController.isLight
               ? ColorsManager.white
-              : ColorsManager.green, // Dark green background
+              : ColorsManager.green,
           borderRadius: BorderRadius.circular(20.r),
           border: Border.all(
             color: themeController.isLight
@@ -67,13 +211,26 @@ class _CustomAdditemState extends State<CustomAdditem> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Align(
+                alignment: AlignmentGeometry.centerLeft,
+                child: Text(
+                  S.of(context).chooseImage,
+                  style: GoogleFonts.inter(
+                    color: themeController.isLight
+                        ? ColorsManager.green
+                        : ColorsManager.gold,
+                    fontSize: 16.sp,
+                  ),
+                ),
+              ),
+              CustomImagePickers(),
               Padding(
                 padding: REdgeInsets.symmetric(vertical: 8),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Product Type?",
-                    style: TextStyle(
+                    S.of(context).productType,
+                    style: GoogleFonts.inter(
                       color: themeController.isLight
                           ? ColorsManager.green
                           : ColorsManager.white,
@@ -120,8 +277,8 @@ class _CustomAdditemState extends State<CustomAdditem> {
                         : ColorsManager.white,
                     value: selectedType,
                     hint: Text(
-                      "Select type",
-                      style: TextStyle(
+                      S.of(context).selectType,
+                      style: GoogleFonts.inter(
                         color: themeController.isLight
                             ? ColorsManager.green
                             : ColorsManager.white,
@@ -133,7 +290,7 @@ class _CustomAdditemState extends State<CustomAdditem> {
                             value: e,
                             child: Text(
                               e,
-                              style: TextStyle(
+                              style: GoogleFonts.inter(
                                 color: themeController.isLight
                                     ? ColorsManager.green
                                     : ColorsManager.white,
@@ -187,8 +344,8 @@ class _CustomAdditemState extends State<CustomAdditem> {
                           : ColorsManager.white,
                       value: selectedSubType, // ✅ no automatic first item
                       hint: Text(
-                        "Select item",
-                        style: TextStyle(
+                        S.of(context).selectItem,
+                        style: GoogleFonts.inter(
                           color: themeController.isLight
                               ? ColorsManager.green
                               : ColorsManager.white,
@@ -200,7 +357,7 @@ class _CustomAdditemState extends State<CustomAdditem> {
                               value: e,
                               child: Text(
                                 e,
-                                style: TextStyle(
+                                style: GoogleFonts.inter(
                                   color: themeController.isLight
                                       ? ColorsManager.green
                                       : ColorsManager.white,
@@ -220,29 +377,81 @@ class _CustomAdditemState extends State<CustomAdditem> {
 
               SizedBox(height: 15.h),
 
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: themeController.isLight
+                      ? ColorsManager.white
+                      : ColorsManager.green,
+                  foregroundColor: themeController.isLight
+                      ? ColorsManager.green
+                      : ColorsManager.gold,
+                  fixedSize: Size(340.w, 60.h),
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: themeController.isLight
+                          ? ColorsManager.green
+                          : ColorsManager.gold,
+                    ),
+                    borderRadius: BorderRadius.circular(16.r),
+                  ),
+                ),
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (_) {
+                      return SizedBox(
+                        height: 500.h, // ✅ using ScreenUtil
+                        child: _buildMap(),
+                      );
+                    },
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Icon(
+                      Icons.location_on,
+                      color: themeController.isLight
+                          ? ColorsManager.green
+                          : ColorsManager.gold,
+                      size: 24.sp,
+                    ),
+                    Text(
+                      "Choose your location",
+                      style: GoogleFonts.inter(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 15.h),
+
               Row(
                 children: [
                   Expanded(
                     child: TextField(
                       controller: stockController,
-                      style: TextStyle(
+                      style: GoogleFonts.inter(
                         color: themeController.isLight
                             ? ColorsManager.green
                             : ColorsManager.white,
                       ),
                       decoration: InputDecoration(
-                        hintText: "Stock",
-                        hintStyle: TextStyle(
+                        hintText: S.of(context).stock,
+                        hintStyle: GoogleFonts.inter(
                           color: themeController.isLight
                               ? ColorsManager.green
                               : ColorsManager.white,
                         ),
-                        suffixText: "LT",
-                        suffixStyle: TextStyle(
-                          color: themeController.isLight
-                              ? ColorsManager.green
-                              : ColorsManager.white,
-                        ),
+                        // suffixText: "LT",
+                        // suffixStyle: TextStyle(
+                        //   color: themeController.isLight
+                        //       ? ColorsManager.green
+                        //       : ColorsManager.white,
+                        // ),
                         filled: true,
                         fillColor: themeController.isLight
                             ? ColorsManager.white
@@ -273,14 +482,14 @@ class _CustomAdditemState extends State<CustomAdditem> {
                   Expanded(
                     child: TextField(
                       controller: priceController,
-                      style: TextStyle(
+                      style: GoogleFonts.inter(
                         color: themeController.isLight
                             ? ColorsManager.green
                             : ColorsManager.white,
                       ),
                       decoration: InputDecoration(
-                        hintText: "Price \\ ton",
-                        hintStyle: TextStyle(
+                        hintText: S.of(context).pricePerTon,
+                        hintStyle: GoogleFonts.inter(
                           color: themeController.isLight
                               ? ColorsManager.green
                               : ColorsManager.white,
@@ -317,14 +526,14 @@ class _CustomAdditemState extends State<CustomAdditem> {
 
               TextField(
                 controller: companyController,
-                style: TextStyle(
+                style: GoogleFonts.inter(
                   color: themeController.isLight
                       ? ColorsManager.green
                       : ColorsManager.white,
                 ),
                 decoration: InputDecoration(
-                  hintText: "Company of the Product",
-                  hintStyle: TextStyle(
+                  hintText: S.of(context).companyOfProduct,
+                  hintStyle: GoogleFonts.inter(
                     color: themeController.isLight
                         ? ColorsManager.green
                         : ColorsManager.white,
@@ -357,15 +566,15 @@ class _CustomAdditemState extends State<CustomAdditem> {
 
               TextField(
                 controller: descriptionController,
-                style: TextStyle(
+                style: GoogleFonts.inter(
                   color: themeController.isLight
                       ? ColorsManager.green
                       : ColorsManager.white,
                 ),
                 maxLines: 4,
                 decoration: InputDecoration(
-                  hintText: "Description",
-                  hintStyle: TextStyle(
+                  hintText: S.of(context).description,
+                  hintStyle: GoogleFonts.inter(
                     color: themeController.isLight
                         ? ColorsManager.green
                         : ColorsManager.white,
@@ -400,8 +609,8 @@ class _CustomAdditemState extends State<CustomAdditem> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Delivery?",
-                    style: TextStyle(
+                    S.of(context).delivery,
+                    style: GoogleFonts.inter(
                       color: themeController.isLight
                           ? ColorsManager.green
                           : ColorsManager.white,
@@ -424,8 +633,8 @@ class _CustomAdditemState extends State<CustomAdditem> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Sell on Credit?",
-                    style: TextStyle(
+                    S.of(context).sellOnCredit,
+                    style: GoogleFonts.inter(
                       color: themeController.isLight
                           ? ColorsManager.green
                           : ColorsManager.white,
@@ -463,7 +672,14 @@ class _CustomAdditemState extends State<CustomAdditem> {
                         stockController.text.isEmpty ||
                         priceController.text.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Please fill all fields')),
+                        SnackBar(content: Text(S.of(context).fillAllFields)),
+                      );
+                      return;
+                    }
+
+                    if (selectedLat == null || selectedLng == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Please choose a location")),
                       );
                       return;
                     }
@@ -482,6 +698,9 @@ class _CustomAdditemState extends State<CustomAdditem> {
                       isDelivery: provider.isDelivery,
                       isCredit: provider.isCredit,
                       name: selectedSubType!,
+                      imageFile: provider.image,
+                      lat: selectedLat!,
+                      lng: selectedLng!,
                     );
                     if (newProduct != null) {
                       // Nothing .. trust me
@@ -489,8 +708,8 @@ class _CustomAdditemState extends State<CustomAdditem> {
                     Navigator.pop(context);
                   },
                   child: Text(
-                    "Add",
-                    style: TextStyle(
+                    S.of(context).add,
+                    style: GoogleFonts.inter(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                       color: themeController.isLight
