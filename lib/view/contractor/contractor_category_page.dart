@@ -6,7 +6,6 @@ import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
 import 'package:moona/generated/l10n.dart';
 import 'package:moona/widgets/product_card_contractor.dart';
-import 'package:moona/widgets/product_card_supplier.dart';
 import 'package:provider/provider.dart';
 
 class ContractorCategoryPage extends StatelessWidget {

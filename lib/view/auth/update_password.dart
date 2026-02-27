@@ -5,11 +5,11 @@ import 'package:moona/controller/theme_controller.dart';
 
 import 'package:moona/controller/user_controller.dart';
 
-import 'package:moona/controller/validation_methods.dart';
-import 'package:moona/core/assets_manager.dart';
+// import 'package:moona/controller/validation_methods.dart';
+// import 'package:moona/core/assets_manager.dart';
 import 'package:moona/core/colors_manager.dart';
 import 'package:moona/widgets/custom_elevated_button.dart';
-import 'package:moona/widgets/custom_text_form_field.dart';
+// import 'package:moona/widgets/custom_text_form_field.dart';
 import 'package:moona/widgets/password_text_field.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

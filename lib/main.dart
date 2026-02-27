@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:moona/controller/addItem_controller.dart';
 import 'package:moona/controller/cart_provider.dart';
 import 'package:moona/controller/checkbox_controller.dart';
@@ -18,6 +19,10 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
+  // Stripe.publishableKey =
+  //     "pk_test_51Sxsb5I7gTKKDGgsML2Z3luBUWrh9h8U4DVyCoZkddGeYW6cbhH4BKR7QIdTlN0zgvNRj3DGtJ8IbXwadbgPzp8q005Low5Xy7";
+  // await Stripe.instance.applySettings();
+
   WidgetsFlutterBinding.ensureInitialized();
 
   await Supabase.initialize(

@@ -86,9 +86,7 @@ class _CategoryPageState extends State<CategoryPage> {
 
                   companyName: product['company'] ?? 'Unknown Company',
                   location: product['location'] ?? 'Unknown Location',
-                  price: product['price_per_ton'] != null
-                      ? '\$${product['price_per_ton']} per ton'
-                      : 'Price not available',
+                  price: '\$${product['price_per_ton']} per ton',
                   itemsCount: product['stock'] ?? 0,
                   currentProduct: product,
                 );

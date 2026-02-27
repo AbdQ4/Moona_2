@@ -11,8 +11,6 @@ import 'package:moona/widgets/custom_text_form_field.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'update_password.dart';
-
 class ForgetPasswordScreen extends StatelessWidget {
   ForgetPasswordScreen({super.key});
 

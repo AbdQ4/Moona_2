@@ -10,7 +10,7 @@ import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
 
 class YourCartPage extends StatelessWidget {
-  YourCartPage({super.key});
+  const YourCartPage({super.key});
 
   static const routeName = "/your_cart";
 
