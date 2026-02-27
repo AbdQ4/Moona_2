@@ -69,40 +69,65 @@ class HomeProducts extends StatelessWidget {
                   ),
                 );
               },
-              child: Container(
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(20),
                   border: Border.all(
                     color: themeController.isLight
-                        ? ColorsManager.green
-                        : ColorsManager.gold,
+                        ? ColorsManager.green.withAlpha(180)
+                        : ColorsManager.gold.withAlpha(180),
                     width: 2,
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 15,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(20),
                   child: Stack(
                     alignment: Alignment.bottomCenter,
                     children: [
-                      Image.asset(
-                        category["image"]!,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        height: double.infinity,
+                      Positioned.fill(
+                        child: Image.asset(
+                          category["image"]!,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                       Container(
                         width: double.infinity,
                         height: 50,
-                        color: ColorsManager.black.withOpacity(0.7),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.black.withOpacity(0.0),
+                              Colors.black.withOpacity(0.7),
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                        ),
                         child: Center(
                           child: Text(
                             category["title"]!,
+                            textAlign: TextAlign.center,
                             style: TextStyle(
                               color: themeController.isLight
                                   ? ColorsManager.white
                                   : ColorsManager.gold,
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black.withOpacity(0.4),
+                                  blurRadius: 4,
+                                  offset: const Offset(1, 1),
+                                ),
+                              ],
                             ),
                           ),
                         ),

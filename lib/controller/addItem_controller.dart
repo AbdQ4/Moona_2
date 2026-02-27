@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
@@ -30,7 +29,7 @@ class AdditemProvider with ChangeNotifier {
       final response = await _supabase
           .from('products')
           .select(
-            'id, price_per_ton, description, image_url, type, company, stock, is_delivery, is_credit, name',
+            'id, price_per_ton, description, image_url, type, company, stock, is_delivery, is_credit, name, longitude, latitude',
           );
 
       _products = List<Map<String, dynamic>>.from(response);
@@ -115,6 +114,8 @@ class AdditemProvider with ChangeNotifier {
     bool? isCredit,
     File? imageFile,
     String? name,
+    double? lng,
+    double? lat,
   }) async {
     try {
       String? imageUrl;
@@ -132,6 +133,8 @@ class AdditemProvider with ChangeNotifier {
         if (isCredit != null) 'is_credit': isCredit,
         if (imageUrl != null) 'image_url': imageUrl,
         if (name != null) 'name': name,
+        if (lng != null) 'longitude': lng,
+        if (lat != null) 'latitude': lat,
       };
 
       final response = await _supabase

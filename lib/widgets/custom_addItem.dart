@@ -9,11 +9,15 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:moona/controller/addItem_controller.dart';
+import 'package:moona/controller/locationController.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
 import 'package:moona/generated/l10n.dart';
+import 'package:moona/widgets/custom_elevated_button.dart';
 import 'package:moona/widgets/custom_image_pickers.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CustomAdditem extends StatefulWidget {
   // ignore: prefer_const_constructors_in_immutables
@@ -42,118 +46,10 @@ class _CustomAdditemState extends State<CustomAdditem> {
   double? selectedLng;
   double currentZoom = 13;
 
-  Widget _buildMap() {
-    return Stack(
-      children: [
-        FlutterMap(
-          mapController: _mapController,
-          options: MapOptions(
-            initialCenter: LatLng(25.2048, 55.2708),
-            initialZoom: currentZoom,
-            onTap: (tapPosition, point) {
-              setState(() {
-                selectedLat = point.latitude;
-                selectedLng = point.longitude;
-              });
-
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text("Location Selected ✅")));
-            },
-            onPositionChanged: (position, hasGesture) {
-              currentZoom = position.zoom ?? currentZoom;
-            },
-          ),
-          children: [
-            TileLayer(
-              urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-              userAgentPackageName: 'com.moona.app',
-            ),
-
-            if (selectedLat != null && selectedLng != null)
-              MarkerLayer(
-                markers: [
-                  Marker(
-                    point: LatLng(selectedLat!, selectedLng!),
-                    width: 40.w,
-                    height: 40.h,
-                    child: Icon(
-                      Icons.location_pin,
-                      size: 40.sp,
-                      color: Colors.red,
-                    ),
-                  ),
-                ],
-              ),
-          ],
-        ),
-
-        /// 📍 Get User Location Button
-        Positioned(
-          right: 16.w,
-          bottom: 100.h,
-          child: FloatingActionButton(
-            mini: true,
-            onPressed: _getUserLocation,
-            child: Icon(Icons.my_location),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Future<void> _getUserLocation() async {
-    try {
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Location services are disabled ❌")),
-        );
-        return;
-      }
-
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Location permission denied ❌")),
-          );
-          return;
-        }
-      }
-
-      if (permission == LocationPermission.deniedForever) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Permission permanently denied ❌")),
-        );
-        return;
-      }
-
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-
-      setState(() {
-        selectedLat = position.latitude;
-        selectedLng = position.longitude;
-      });
-
-      _mapController.move(LatLng(position.latitude, position.longitude), 16);
-
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Current location loaded ✅")));
-    } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Failed to get location ❌")));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final themeController = Provider.of<ThemeController>(context);
+    final locationController = Provider.of<Locationcontroller>(context);
     final size = MediaQuery.of(context).size;
     final height = size.height; // screen height
     // ignore: unused_local_variable
@@ -378,56 +274,7 @@ class _CustomAdditemState extends State<CustomAdditem> {
 
               SizedBox(height: 15.h),
 
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: themeController.isLight
-                      ? ColorsManager.white
-                      : ColorsManager.green,
-                  foregroundColor: themeController.isLight
-                      ? ColorsManager.green
-                      : ColorsManager.gold,
-                  fixedSize: Size(340.w, 60.h),
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                      color: themeController.isLight
-                          ? ColorsManager.green
-                          : ColorsManager.gold,
-                    ),
-                    borderRadius: BorderRadius.circular(16.r),
-                  ),
-                ),
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (_) {
-                      return SizedBox(
-                        height: 500.h, // ✅ using ScreenUtil
-                        child: _buildMap(),
-                      );
-                    },
-                  );
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Icon(
-                      Icons.location_on,
-                      color: themeController.isLight
-                          ? ColorsManager.green
-                          : ColorsManager.gold,
-                      size: 24.sp,
-                    ),
-                    Text(
-                      "Choose your location",
-                      style: GoogleFonts.inter(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              _selectedLocationPreview(themeController, locationController),
               SizedBox(height: 15.h),
 
               Row(
@@ -725,6 +572,125 @@ class _CustomAdditemState extends State<CustomAdditem> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _selectedLocationPreview(
+    ThemeController themeController,
+    Locationcontroller locationController,
+  ) {
+    if (selectedLat == null || selectedLng == null) {
+      return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: themeController.isLight
+              ? ColorsManager.white
+              : ColorsManager.green,
+          foregroundColor: themeController.isLight
+              ? ColorsManager.green
+              : ColorsManager.gold,
+          fixedSize: Size(340.w, 60.h),
+          shape: RoundedRectangleBorder(
+            side: BorderSide(
+              color: themeController.isLight
+                  ? ColorsManager.green
+                  : ColorsManager.gold,
+            ),
+            borderRadius: BorderRadius.circular(16.r),
+          ),
+        ),
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (_) {
+              return StatefulBuilder(
+                builder: (context, setModalState) => SizedBox(
+                  height: 500.h,
+                  child: locationController.locationPicker(
+                    themeController: themeController,
+                    onLocationSelected: (LatLng point) {
+                      setState(() {
+                        selectedLat = point.latitude;
+                        selectedLng = point.longitude;
+                      });
+                    },
+                    setModalState: setModalState,
+                    selectedLat: selectedLat,
+                    selectedLng: selectedLng,
+                    currentZoom: currentZoom,
+                    context: context,
+                    mapController: _mapController,
+                  ),
+                ),
+              );
+            },
+          );
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Icon(
+              Icons.location_on,
+              color: themeController.isLight
+                  ? ColorsManager.green
+                  : ColorsManager.gold,
+              size: 24.sp,
+            ),
+            Text(
+              "Choose your location",
+              style: GoogleFonts.inter(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        locationController.viewLocation(lat: selectedLat!, lng: selectedLng!),
+        CustomElevatedButton(
+          title: "Change location",
+          onTap: () async {
+            final result = await showModalBottomSheet<LatLng>(
+              context: context,
+              isScrollControlled: true,
+              builder: (sheetContext) {
+                return StatefulBuilder(
+                  builder: (context, setModalState) {
+                    return SizedBox(
+                      height: 500.h,
+                      child: locationController.locationPicker(
+                        themeController: themeController,
+                        onLocationSelected: (LatLng point) {
+                          setState(() {
+                            selectedLat = point.latitude;
+                            selectedLng = point.longitude;
+                          });
+                        },
+                        setModalState: setModalState,
+                        selectedLat: selectedLat,
+                        selectedLng: selectedLng,
+                        currentZoom: currentZoom,
+                        context: context,
+                        mapController: _mapController,
+                      ),
+                    );
+                  },
+                );
+              },
+            );
+            if (result != null) {
+              setState(() {
+                selectedLat = result.latitude;
+                selectedLng = result.longitude;
+              });
+            }
+          },
+        ),
+      ],
     );
   }
 }

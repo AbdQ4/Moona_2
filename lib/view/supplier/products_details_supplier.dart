@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:moona/controller/addItem_controller.dart';
+import 'package:moona/controller/locationController.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/assets_manager.dart';
 import 'package:moona/core/colors_manager.dart';
 import 'package:moona/generated/l10n.dart';
+import 'package:moona/widgets/custom_elevated_button.dart';
 import 'package:moona/widgets/custom_image_pickers.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProductsDetailsSupplier extends StatefulWidget {
   const ProductsDetailsSupplier({super.key});
@@ -33,6 +38,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
   @override
   Widget build(BuildContext context) {
     final themeController = Provider.of<ThemeController>(context);
+    final locationController = Provider.of<Locationcontroller>(context);
     final Map<String, dynamic> product =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
@@ -46,6 +52,11 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
     final stockController = TextEditingController(
       text: product['stock'].toString(),
     );
+
+    double? updatedLat;
+    double? updatedLng;
+    final mapController = MapController();
+    double currentZoom = 13.0;
 
     return Scaffold(
       backgroundColor: themeController.isLight
@@ -94,7 +105,8 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12.r),
                   child: Image.network(
-                    product['image_url'],
+                    updatedProduct['image_url'],
+                    key: ValueKey(updatedProduct['image_url']),
                     height: 200.h,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -114,28 +126,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                   ),
                 ),
                 SizedBox(height: 8.h),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.location_on_rounded,
-                      size: 26,
-                      color: themeController.isLight
-                          ? ColorsManager.green
-                          : ColorsManager.gold,
-                    ),
-                    SizedBox(width: 4.w),
-                    Text(
-                      updatedProduct['location'] ?? "Unknown Location",
-                      style: TextStyle(
-                        color: themeController.isLight
-                            ? ColorsManager.green
-                            : ColorsManager.gold,
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
+
                 SizedBox(height: 12.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -222,6 +213,21 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                     ),
                   ),
                 ),
+                SizedBox(height: 10.h),
+                Text(
+                  "Product's Location :",
+                  style: GoogleFonts.inter(
+                    color: themeController.isLight
+                        ? ColorsManager.green
+                        : ColorsManager.white,
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                locationController.viewLocation(
+                  lat: updatedLat ?? updatedProduct['latitude'],
+                  lng: updatedLng ?? updatedProduct['longitude'],
+                ),
                 SizedBox(height: 24.h),
 
                 // Delivery & Credit
@@ -276,12 +282,49 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: themeController.isLight
+                        ? ColorsManager.green
+                        : ColorsManager.gold,
+                    foregroundColor: themeController.isLight
+                        ? ColorsManager.white
+                        : ColorsManager.green,
+                    minimumSize: Size(double.infinity, 48.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                  ),
+                  onPressed: () {
+                    updatedLng = product['longitude'];
+                    updatedLat = product['latitude'];
+                    locationController.shareLocation(
+                      context: context,
+                      lat: updatedLat!,
+                      lng: updatedLng!,
+                    );
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Icon(Icons.share, size: 24.sp),
+                      Text(
+                        "Share Location",
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.sp,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: themeController.isLight
                         ? ColorsManager.gold
                         : ColorsManager.grey,
                     foregroundColor: ColorsManager.green,
                     minimumSize: Size(double.infinity, 48.h),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
                   ),
                   onPressed: () {
@@ -322,15 +365,25 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        "${S.of(context).editProduct} - ${product['company']}",
-                                        style: TextStyle(
-                                          color: themeController.isLight
-                                              ? ColorsManager.green
-                                              : ColorsManager.white,
-                                          fontSize: 20.sp,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                      Row(
+                                        children: [
+                                          BackButton(
+                                            color: themeController.isLight
+                                                ? ColorsManager.green
+                                                : ColorsManager.white,
+                                          ),
+                                          SizedBox(width: 8.w),
+                                          Text(
+                                            "${S.of(context).editProduct} - ${product['company']}",
+                                            style: TextStyle(
+                                              color: themeController.isLight
+                                                  ? ColorsManager.green
+                                                  : ColorsManager.white,
+                                              fontSize: 20.sp,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                       SizedBox(height: 16.h),
                                       Text(
@@ -343,7 +396,57 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                                         ),
                                       ),
                                       CustomImagePickers(),
-                                      SizedBox(height: 10.h),
+                                      SizedBox(height: 12.h),
+                                      CustomElevatedButton(
+                                        title: "Change Location",
+                                        onTap: () async {
+                                          final result = await showModalBottomSheet<LatLng>(
+                                            context: context,
+                                            isScrollControlled: true,
+                                            builder: (sheetContext) {
+                                              return StatefulBuilder(
+                                                builder: (context, setModalState) {
+                                                  return SizedBox(
+                                                    height: 500.h,
+                                                    child: locationController
+                                                        .locationPicker(
+                                                          themeController:
+                                                              themeController,
+                                                          onLocationSelected:
+                                                              (LatLng point) {
+                                                                setState(() {
+                                                                  updatedLat = point
+                                                                      .latitude;
+                                                                  updatedLng = point
+                                                                      .longitude;
+                                                                });
+                                                              },
+                                                          setModalState:
+                                                              setModalState,
+                                                          selectedLat:
+                                                              updatedLat,
+                                                          selectedLng:
+                                                              updatedLng,
+                                                          currentZoom:
+                                                              currentZoom,
+                                                          context: context,
+                                                          mapController:
+                                                              mapController,
+                                                        ),
+                                                  );
+                                                },
+                                              );
+                                            },
+                                          );
+                                          if (result != null) {
+                                            setState(() {
+                                              updatedLat = result.latitude;
+                                              updatedLng = result.longitude;
+                                            });
+                                          }
+                                        },
+                                      ),
+                                      SizedBox(height: 12.h),
                                       TextFormField(
                                         style: GoogleFonts.inter(
                                           color: themeController.isLight
@@ -673,6 +776,9 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                                                               .text,
                                                       isDelivery: delivery,
                                                       isCredit: credit,
+                                                      lat: updatedLat,
+                                                      lng: updatedLng,
+                                                      imageFile: provider.image,
                                                     );
                                                     Navigator.pop(ctx, true);
                                                     setState(() {});
@@ -716,7 +822,7 @@ class _ProductsDetailsSupplierState extends State<ProductsDetailsSupplier> {
                                             ).showSnackBar(
                                               SnackBar(
                                                 content: Text(
-                                                  S.of(context).productDeleted,
+                                                  S.of(context).updateFailed,
                                                   style: GoogleFonts.inter(
                                                     color:
                                                         themeController.isLight

@@ -5,7 +5,6 @@ import 'package:moona/controller/addItem_controller.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/core/colors_manager.dart';
 import 'package:moona/generated/l10n.dart';
-import 'package:moona/widgets/custom_addItem.dart';
 import 'package:moona/widgets/home_products.dart';
 import 'package:provider/provider.dart';
 
@@ -31,6 +30,7 @@ class _HomePageState extends State<SupplierHomePage> {
   Widget build(BuildContext context) {
     final addItemProvider = Provider.of<AdditemProvider>(context);
     final themeController = Provider.of<ThemeController>(context);
+
     return Scaffold(
       backgroundColor: themeController.isLight
           ? ColorsManager.white
@@ -52,37 +52,6 @@ class _HomePageState extends State<SupplierHomePage> {
               ),
             ),
           ],
-        ),
-      ),
-
-      /// Add item section
-      floatingActionButton: SizedBox(
-        height: 60.h,
-        width: 60.w,
-        child: FloatingActionButton(
-          shape: CircleBorder(),
-          backgroundColor: themeController.isLight
-              ? ColorsManager.green
-              : ColorsManager.gold,
-          child: Icon(
-            Icons.add,
-            color: themeController.isLight
-                ? ColorsManager.white
-                : ColorsManager.green,
-            size: 48.sp,
-          ),
-          onPressed: () async {
-            await showDialog(
-              context: context,
-              builder: (context) => Dialog(
-                insetPadding: REdgeInsets.all(16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.r),
-                ),
-                child: CustomAdditem(),
-              ),
-            );
-          },
         ),
       ),
       body: SingleChildScrollView(

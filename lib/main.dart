@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:moona/controller/addItem_controller.dart';
 import 'package:moona/controller/cart_provider.dart';
 import 'package:moona/controller/checkbox_controller.dart';
-import 'package:moona/controller/chekout_controller.dart';
 import 'package:moona/controller/lang_controller.dart';
+import 'package:moona/controller/locationController.dart';
 import 'package:moona/controller/payment_controller.dart';
-import 'package:moona/controller/quantity_dialog_provider.dart';
-import 'package:moona/controller/supplier_controller.dart';
 import 'package:moona/controller/theme_controller.dart';
 import 'package:moona/controller/license_controller.dart';
 import 'package:moona/controller/user_controller.dart';
@@ -46,15 +45,11 @@ void main() async {
         ChangeNotifierProvider(create: (_) => LicenseController()),
         ChangeNotifierProvider(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => UserController(navigatorKey)),
-        ChangeNotifierProvider(create: (_) => SupplierController()),
         ChangeNotifierProvider(create: (_) => AdditemProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => CardDetailsController()),
-        ChangeNotifierProvider(create: (_) => CheckoutController()),
-        ChangeNotifierProvider(
-          create: (_) => QuantityDialogProvider(pricePerTon: 1000),
-        ),
         ChangeNotifierProvider(create: (_) => LangController()),
+        ChangeNotifierProvider(create: (_) => Locationcontroller()),
       ],
       child: Moona(),
     ),
